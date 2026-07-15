@@ -37,6 +37,9 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--code-bg);padd
 .switcher button[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600;}
 .topbar .spacer{flex:1;}
 .searchbtn{display:flex;align-items:center;gap:8px;padding:7px 12px;min-width:180px;border:1px solid var(--border);border-radius:9px;background:var(--bg-subtle);color:var(--text-muted);font-size:13px;}
+.openprod{margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap;text-decoration:none;}
+.openprod:hover{background:var(--bg-subtle);}
+.openprod svg{width:14px;height:14px;flex:none;}
 .searchbtn kbd{margin-left:auto;font-family:var(--font-mono);font-size:11px;border:1px solid var(--border);border-radius:5px;padding:1px 5px;background:var(--surface);}
 .seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
 .seg button{padding:5px 10px;border:none;background:transparent;color:var(--text-muted);font-size:12px;font-weight:600;}
@@ -181,7 +184,14 @@ a.prodcard:hover{border-color:var(--accent);box-shadow:var(--shadow);text-decora
 .placeholder{max-width:640px;margin:60px auto;text-align:center;padding:0 24px;}
 .placeholder h1{font-size:24px;margin-bottom:10px;}.placeholder p{color:var(--text-soft);}
 .site-footer{border-top:1px solid var(--border);background:var(--bg-subtle);margin-top:20px;}
-.ft-inner{max-width:var(--page-max);margin:0 auto;padding:18px 24px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between;}
+.ft-inner{max-width:var(--page-max);margin:0 auto;padding:18px 24px;display:flex;flex-direction:column;gap:14px;}
+.ft-apps{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.ft-apps-h{font-size:12.5px;font-weight:600;color:var(--text-soft);}
+.ft-apps-links{display:flex;flex-wrap:wrap;gap:8px 18px;}
+.ft-apps-links a{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text);font-weight:500;text-decoration:none;}
+.ft-apps-links a:hover{color:var(--accent);}
+.ft-apps-links a svg{width:14px;height:14px;color:var(--text-muted);flex:none;}
+.ft-meta{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between;}
 .ft-note{font-size:12.5px;color:var(--text-muted);}
 .ft-links{display:flex;align-items:center;gap:14px;font-size:12.5px;}
 .ft-ai{display:inline-flex;align-items:center;color:var(--text-soft);font-weight:600;}
@@ -220,6 +230,7 @@ var T={
   anchorLabel:{en:"Link to this section",ja:"この見出しへのリンク"},
   openapiNote:{en:"This reference is generated from the OpenAPI specification.",ja:"このリファレンスは OpenAPI 仕様から自動生成しています。"},
   aiReady:{en:"Built for AI readers",ja:"AI 読者に対応"},llmsFull:{en:"Full text for LLMs",ja:"LLM 向け全文"},footNote:{en:"This site publishes machine-readable text for LLMs and AI agents.",ja:"このサイトは LLM・AI エージェント向けの機械可読テキストを配信しています。"},
+  openProduct:{en:"Open a product",ja:"製品を開く"},
   noTut:{en:"No tutorials match. Clear a filter.",ja:"該当なし。フィルタを外してください。"},searchMock:{en:"Prototype — search is illustrative",ja:"プロトタイプ — 検索は説明用のモック"},
   stubBody:{en:"This article is in preparation — its outline is agreed and drafting is underway.",ja:"この記事は準備中です（章立ては確定済み、執筆中）。"},
   staleBody:{en:"This page may be out of date and might not reflect the current product.",ja:"このページは内容が古い可能性があります。現在の仕様と異なる場合があります。"}
@@ -250,6 +261,9 @@ var SECTIONS={
 };
 var PRODUCT_LIST=["visualizer","cms","flow","dashboard"];
 var DEV_LIST=["vplugin","cmsdev","flowdev"];
+var APP_URL={visualizer:"https://visualizer.reearth.io/",cms:"https://cms.reearth.io/",flow:"https://flow.reearth.io/",dashboard:"https://reearth.io/"};
+var DEV_PARENT={vplugin:"visualizer",cmsdev:"cms",flowdev:"flow"};
+function appOpenLabel(prod){var n=secName(prod).replace("Re:Earth ","");return S.lang==="en"?("Open "+n):(n+" を開く");}
 function sec(id){return SECTIONS[id]||null;}
 function secName(id){var s=sec(id);return s?L(s.name):id;}
 var PAGES={};
@@ -405,7 +419,12 @@ function render(){
   document.getElementById("app").innerHTML=topbar()+main+siteFooter();
   wire();renderSearch();
 }
-function siteFooter(){return '<footer class="site-footer"><div class="ft-inner"><span class="ft-note">'+L(T.footNote)+'</span><span class="ft-links"><span class="ft-ai">'+svg("ai")+L(T.aiReady)+'</span><a href="/llms.txt" target="_blank" rel="noopener">llms.txt</a><a href="/llms-full.txt" target="_blank" rel="noopener">llms-full.txt</a></span></div></footer>';}
+function siteFooter(){
+  var apps=PRODUCT_LIST.map(function(id){return '<a href="'+APP_URL[id]+'" target="_blank" rel="noopener">'+svg("launch")+secName(id).replace("Re:Earth ","")+'</a>';}).join("");
+  return '<footer class="site-footer"><div class="ft-inner">'
+    +'<div class="ft-apps"><span class="ft-apps-h">'+L(T.openProduct)+'</span><span class="ft-apps-links">'+apps+'</span></div>'
+    +'<div class="ft-meta"><span class="ft-note">'+L(T.footNote)+'</span><span class="ft-links"><span class="ft-ai">'+svg("ai")+L(T.aiReady)+'</span><a href="/llms.txt" target="_blank" rel="noopener">llms.txt</a><a href="/llms-full.txt" target="_blank" rel="noopener">llms-full.txt</a></span></div>'
+    +'</div></footer>';}
 function topbar(){
   var isTut=(S.route==="tutorials")||(PAGES[S.route]&&PAGES[S.route].standalone&&PAGES[S.route].type==="tutorial");
   var isDev=(!isTut)&&((S.route==="developer")||(PAGES[S.route]&&sec(S.product)&&sec(S.product).kind==="dev"));
@@ -423,7 +442,9 @@ function docShell(){var p=PAGES[S.route];if(!p)return placeholder();
   return subbar()+'<div class="shell"><aside class="sidebar" aria-label="'+esc(secName(S.product))+'">'+sidebar()+'</aside><div class="main" id="main">'+article(p)+'</div></div>';}
 function subbar(){var cfg=sec(S.product);if(!cfg)return "";var tabs=cfg.tabs||[];var p=PAGES[S.route];
   var ctx=cfg.kind==="dev"?'<a href="#" class="ctx" data-route="'+tabRouteFor(S.product,"overview")+'">'+esc(secName(S.product))+'</a><span class="ctx-sep">/</span>':'';
-  return '<nav class="subbar" aria-label="'+esc(secName(S.product))+' sections">'+ctx+tabs.map(function(tab){var route=tabRouteFor(S.product,tab);var cur=(p&&p.tab===tab);return '<button data-route="'+(route||"")+'" '+(cur?'aria-current="true"':'')+(route?'':' disabled style="opacity:.4"')+'>'+tabTitle(tab)+'</button>';}).join("")+'</nav>';}
+  var appPid=DEV_PARENT[S.product]||S.product;
+  var openLink=APP_URL[appPid]?'<a class="openprod" href="'+APP_URL[appPid]+'" target="_blank" rel="noopener" style="color:var(--c-'+sec(appPid).accent+')">'+svg("launch")+'<span>'+appOpenLabel(appPid)+'</span></a>':'';
+  return '<nav class="subbar" aria-label="'+esc(secName(S.product))+' sections">'+ctx+tabs.map(function(tab){var route=tabRouteFor(S.product,tab);var cur=(p&&p.tab===tab);return '<button data-route="'+(route||"")+'" '+(cur?'aria-current="true"':'')+(route?'':' disabled style="opacity:.4"')+'>'+tabTitle(tab)+'</button>';}).join("")+openLink+'</nav>';}
 function sideLink(k){var pg=PAGES[k];return '<a href="#" data-route="'+k+'" '+(S.route===k?'aria-current="true"':'')+'>'+L(pg.title)+'</a>';}
 function sidebar(){var cfg=sec(S.product);if(!cfg)return "";var p=PAGES[S.route];
   var curTab=(p&&p.tab)?p.tab:"overview";
@@ -528,7 +549,7 @@ function library(){var fp=S.tut.product,fa=S.tut.audience;
     return '<a class="tutcard" href="#" data-route="'+it.route+'"><div class="meta"><span class="badge" style="background:'+diaSoft("tutorial")+';color:'+diaColor("tutorial")+'">'+prodName+'</span><span class="badge" style="background:var(--bg-subtle);color:var(--text-soft)">'+(it.audience==="developer"?L(T.developer):L(T.user))+'</span>'+(pg.est?'<span class="badge" style="background:var(--bg-subtle);color:var(--text-muted)">⏱ '+L(pg.est)+'</span>':'')+'</div><div class="ct">'+L(pg.title)+'</div><div class="cd">'+L(pg.lead)+'</div></a>';}).join(""):'<div class="empty">'+L(T.noTut)+'</div>';
   return '<main class="lib" id="main"><h1>'+L(T.tutorials)+'</h1><p class="sub">'+L(T.tutSub)+'</p><div class="filters"><div class="fgroup"><div class="fh">'+L(T.filterProduct)+'</div><div class="chips">'+prodChips+'</div></div><div class="fgroup"><div class="fh">'+L(T.filterAudience)+'</div><div class="chips">'+audChips+'</div></div></div><div class="tutlist">'+cards+'</div></main>';}
 function placeholder(){var nm=secName(S.product)||"Re:Earth";return '<div class="placeholder" id="main"><h1>'+esc(nm)+' '+L(T.docs)+'</h1><p>'+L({en:"This section is a placeholder in the prototype. CMS, Visualizer and the Visualizer Plugin site are built out — use the switcher.",ja:"このセクションはプロトタイプ上のプレースホルダーです。CMS・Visualizer・Visualizer Plugin は作り込み済みです。スイッチャーからご覧ください。"})+'</p></div>';}
-function svg(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';if(k==="search")return '<svg width="15" height="15" viewBox="0 0 24 24"><circle '+s+' cx="11" cy="11" r="7"/><path '+s+' d="M21 21l-4-4"/></svg>';if(k==="clock")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px"><circle '+s+' cx="12" cy="12" r="9"/><path '+s+' d="M12 7v5l3 2"/></svg>';if(k==="ext")return '<svg width="16" height="16" viewBox="0 0 24 24"><path '+s+' d="M17 3a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4z"/><path '+s+' d="M8.5 12.5h7M12 9v7"/></svg>';if(k==="ai")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:5px"><path '+s+' d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>';return "";}
+function svg(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';if(k==="search")return '<svg width="15" height="15" viewBox="0 0 24 24"><circle '+s+' cx="11" cy="11" r="7"/><path '+s+' d="M21 21l-4-4"/></svg>';if(k==="clock")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px"><circle '+s+' cx="12" cy="12" r="9"/><path '+s+' d="M12 7v5l3 2"/></svg>';if(k==="ext")return '<svg width="16" height="16" viewBox="0 0 24 24"><path '+s+' d="M17 3a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4z"/><path '+s+' d="M8.5 12.5h7M12 9v7"/></svg>';if(k==="ai")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:5px"><path '+s+' d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>';if(k==="launch")return '<svg width="15" height="15" viewBox="0 0 24 24"><path '+s+' d="M14 4h6v6"/><path '+s+' d="M20 4L11 13"/><path '+s+' d="M18 14v3a3 3 0 01-3 3H7a3 3 0 01-3-3V9a3 3 0 013-3h3"/></svg>';return "";}
 function iconFor(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';var d={tutorial:'<path '+s+' d="M12 4l10 5-10 5L2 9z"/><path '+s+' d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/>',howto:'<path '+s+' d="M14.7 6.3a4 4 0 00-5.4 5.2L3 18v3h3l6.5-6.5a4 4 0 005.2-5.4l-2.6 2.6-2.1-.5-.5-2.1z"/>',reference:'<path '+s+' d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/>',concepts:'<path '+s+' d="M9 18h6M10 21h4M12 3a6 6 0 013.5 10.9c-.5.4-.5 1-.5 1.6H9c0-.6 0-1.2-.5-1.6A6 6 0 0112 3z"/>'}[k];return '<svg width="15" height="15" viewBox="0 0 24 24" style="margin-right:1px">'+d+'</svg>';}
 function searchProd(p){var scn=sec(p.section);if(!p.section)return "";return (scn&&scn.kind==="dev")?"developer":p.section;}
 function searchDocs(){return Object.keys(PAGES).map(function(k){var p=PAGES[k];var scn=sec(p.section);return {route:k,title:L(p.title),crumb:(scn?L(scn.name).replace("Re:Earth ",""):"")+" · "+(p.type?L(DIA[p.type].label):(p.tab?tabTitle(p.tab):"")),type:p.type||"",product:searchProd(p)};});}
