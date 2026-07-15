@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" data-product="cms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Re:Earth Docs — prototype v3</title>
+<style>
+:root{
+  --c-white:#fff;--c-gray-50:#f7f9fb;--c-gray-100:#eef2f6;--c-gray-200:#dde3ec;--c-gray-300:#c6cedb;--c-gray-400:#9aa6b8;--c-gray-500:#6b7888;--c-gray-600:#4d5b6b;--c-gray-700:#36424f;--c-gray-900:#131b24;
+  --c-brand:#1664e0;
+  --c-visualizer:#1f5ee0;--c-visualizer-soft:#e7efff;--c-cms:#6d4be0;--c-cms-soft:#efeafe;--c-flow:#0e766b;--c-flow-soft:#ddf3f0;--c-dashboard:#4d5b6b;
+  --t-tutorial:#0f7a48;--t-tutorial-soft:#e1f4ea;--t-howto:#1664e0;--t-howto-soft:#e8f0fe;--t-reference:#6d4be0;--t-reference-soft:#efeafe;--t-concepts:#96590a;--t-concepts-soft:#fbefda;
+  --font-sans:system-ui,-apple-system,"Segoe UI","Noto Sans JP",Meiryo,sans-serif;--font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --topbar-h:60px;--subbar-h:48px;--sidebar-w:290px;--toc-w:230px;--content-max:760px;--page-max:1460px;
+}
+:root[data-theme="light"]{--bg:#fff;--bg-subtle:#f7f9fb;--surface:#fff;--border:#dde3ec;--border-strong:#c6cedb;--text:#131b24;--text-soft:#4d5b6b;--text-muted:#5c6773;--code-bg:#f2f5f9;--shadow:0 4px 14px rgba(15,27,36,.08);--accent:var(--c-cms);--accent-soft:var(--c-cms-soft);}
+:root[data-theme="dark"]{--bg:#17191e;--bg-subtle:#1c1f26;--surface:#1c1f26;--border:#2c303a;--border-strong:#3a3f4b;--text:#f6f7f9;--text-soft:#c6ccd5;--text-muted:#8a929f;--code-bg:#131b24;--shadow:0 8px 24px rgba(0,0,0,.4);--accent:#a98bff;--accent-soft:#2b2347;}
+:root[data-product="cms"]{--accent:var(--c-cms);--accent-soft:var(--c-cms-soft);}
+:root[data-product="visualizer"]{--accent:var(--c-visualizer);--accent-soft:var(--c-visualizer-soft);}
+:root[data-product="flow"]{--accent:var(--c-flow);--accent-soft:var(--c-flow-soft);}
+:root[data-theme="dark"][data-product="cms"]{--accent:#a98bff;--accent-soft:#2b2347;}
+:root[data-theme="dark"][data-product="visualizer"]{--accent:#6f9bff;--accent-soft:#1f2b44;}
+:root[data-theme="dark"][data-product="flow"]{--accent:#34c9bb;--accent-soft:#163a37;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--font-sans);font-size:15px;line-height:1.65;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;}
+a{color:var(--accent);text-decoration:none;}
+h1,h2,h3{line-height:1.25;letter-spacing:-.018em;font-weight:600;}
+button{font-family:inherit;cursor:pointer;}
+code{font-family:var(--font-mono);font-size:.85em;background:var(--code-bg);padding:2px 6px;border-radius:5px;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:#fff;padding:8px 14px;border-radius:8px;z-index:100;}.skip:focus{left:8px;}
+.topbar{position:sticky;top:0;z-index:30;height:var(--topbar-h);display:flex;align-items:center;gap:16px;padding:0 22px;background:var(--surface);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.02em;font-size:16px;color:var(--text);background:none;border:none;padding:0;}
+.logo .dot{width:22px;height:22px;border-radius:7px;background:var(--c-brand);}
+.switcher{display:flex;gap:2px;margin-left:4px;flex-wrap:wrap;}
+.switcher button{padding:7px 11px;border:none;border-radius:8px;font-size:13.5px;font-weight:500;background:transparent;color:var(--text-soft);white-space:nowrap;}
+.switcher button[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600;}
+.topbar .spacer{flex:1;}
+.searchbtn{display:flex;align-items:center;gap:8px;padding:7px 12px;min-width:180px;border:1px solid var(--border);border-radius:9px;background:var(--bg-subtle);color:var(--text-muted);font-size:13px;}
+.searchbtn kbd{margin-left:auto;font-family:var(--font-mono);font-size:11px;border:1px solid var(--border);border-radius:5px;padding:1px 5px;background:var(--surface);}
+.seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.seg button{padding:5px 10px;border:none;background:transparent;color:var(--text-muted);font-size:12px;font-weight:600;}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);}
+.iconbtn{width:34px;height:34px;border:1px solid var(--border);border-radius:8px;background:var(--bg-subtle);color:var(--text-soft);display:flex;align-items:center;justify-content:center;font-size:15px;}
+.subbar{position:sticky;top:var(--topbar-h);z-index:20;height:var(--subbar-h);display:flex;align-items:center;gap:4px;padding:0 22px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;}
+.subbar .ctx{font-size:13.5px;font-weight:600;color:var(--text);white-space:nowrap;text-decoration:none;padding:6px 4px;border-radius:6px;}
+.subbar .ctx:hover{color:var(--accent);}
+.subbar .ctx-sep{color:var(--text-muted);margin-right:6px;font-size:12px;}
+.subbar button{padding:7px 12px;border:none;border-radius:8px;font-size:13.5px;font-weight:500;background:transparent;color:var(--text-soft);white-space:nowrap;}
+.subbar button[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600;}
+.shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;max-width:var(--page-max);}
+.sidebar{border-right:1px solid var(--border);padding:22px 14px;height:calc(100vh - var(--topbar-h) - var(--subbar-h));position:sticky;top:calc(var(--topbar-h) + var(--subbar-h));overflow-y:auto;}
+.sidebar .grp{margin-bottom:15px;}
+.sidebar .grp-h{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);padding:5px 10px;width:100%;background:none;border:none;text-align:left;cursor:pointer;border-radius:6px;}
+.sidebar .grp-h:hover{background:var(--bg-subtle);color:var(--text-soft);}
+.sidebar .grp-h .chev{font-size:9px;width:9px;flex:none;}
+.sidebar .sb-tab{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);padding:2px 10px 8px;}
+.sidebar .grp-h .swatch{width:8px;height:8px;border-radius:3px;}
+.sidebar a{display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:8px;font-size:13.5px;color:var(--text-soft);border-left:2px solid transparent;margin-bottom:1px;}
+.sidebar a[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600;border-left-color:var(--accent);}
+.sidebar a .soon{margin-left:auto;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border);border-radius:4px;padding:0 4px;}
+.main{min-width:0;}
+.content-wrap{display:grid;grid-template-columns:minmax(0,1fr) var(--toc-w);gap:40px;padding:34px 40px 80px;max-width:1200px;}
+.content-wrap.no-toc{grid-template-columns:minmax(0,1fr);max-width:900px;}
+article{min-width:0;max-width:var(--content-max);}
+article a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;}
+.toc{position:sticky;top:calc(var(--topbar-h) + var(--subbar-h) + 20px);height:max-content;font-size:12.5px;}
+.toc .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:8px;}
+.toc a{display:block;padding:4px 0 4px 12px;color:var(--text-muted);border-left:1px solid var(--border);text-decoration:none;}
+.crumbs{display:flex;gap:7px;font-size:12.5px;color:var(--text-muted);margin-bottom:14px;flex-wrap:wrap;}
+.crumbs a{color:var(--text-muted);}.crumbs .sep{opacity:.5;}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;}
+.tags{margin:10px 0 2px;}
+.tag{font-size:11.5px;font-weight:600;color:var(--text-soft);background:var(--bg-subtle);border:1px solid var(--border);border-radius:6px;padding:2px 8px;}
+h1.title{font-size:31px;margin:14px 0 8px;}
+.lead{font-size:17px;color:var(--text-soft);margin:0 0 22px;}
+article h2{font-size:21px;margin:32px 0 12px;scroll-margin:100px;}
+.hanchor{opacity:0;margin-left:8px;color:var(--text-muted);text-decoration:none;font-weight:400;transition:opacity .12s;}
+article h2:hover .hanchor,article h3:hover .hanchor,.hanchor:focus{opacity:1;}
+.hanchor:hover{color:var(--accent);}
+@media(hover:none){.hanchor{opacity:.5;}}
+article p{margin:0 0 14px;color:var(--text-soft);}article b{color:var(--text);}
+article ul{color:var(--text-soft);margin:0 0 14px;padding-left:22px;}article li{margin:3px 0;}
+.note{display:flex;gap:11px;padding:13px 16px;border:1px solid var(--accent);border-radius:12px;background:var(--accent-soft);margin:0 0 24px;font-size:13.5px;color:var(--text-soft);}
+.stale{display:flex;gap:11px;padding:12px 16px;border:1px solid var(--c-flow);background:var(--c-flow-soft);border-radius:12px;margin:0 0 22px;font-size:13px;color:#0b3d38;}
+:root[data-theme="dark"] .stale{color:#bfeee7;background:#12332f;}
+.stub{padding:20px 22px;border:1px dashed var(--border-strong);border-radius:12px;color:var(--text-muted);font-size:14px;background:var(--bg-subtle);}
+.codeblock{border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:var(--code-bg);font-family:var(--font-mono);font-size:12.5px;color:var(--text-soft);overflow-x:auto;margin:0 0 16px;line-height:1.7;}
+.codeblock .k{color:#a855f7;}.codeblock .cm{color:var(--text-muted);}
+.refitem{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--surface);scroll-margin:100px;}
+.refitem .hd{display:flex;align-items:center;gap:11px;margin-bottom:7px;}
+.refitem .num{width:26px;height:26px;flex:none;border-radius:7px;background:var(--t-reference-soft);color:var(--t-reference);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12px;font-weight:600;}
+.refitem h3{font-size:15px;margin:0;flex:1;}
+.pager{display:flex;gap:12px;margin:30px 0 0;}
+.pagecard{flex:1;min-width:0;display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:12px;padding:13px 16px;background:var(--surface);color:inherit;text-decoration:none;}
+.pagecard:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.pagecard .body{min-width:0;}
+.pagecard .lab{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);}
+.pagecard .tt{display:block;font-weight:600;color:var(--text);font-size:14.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pagecard .arr{flex:none;color:var(--text-muted);font-size:18px;}
+.pagecard:hover .arr{color:var(--accent);}
+.pagecard.prev{justify-content:flex-start;}
+.pagecard.next{justify-content:flex-end;text-align:right;}
+.seealso{margin-top:26px;padding-top:16px;border-top:1px solid var(--border);}
+.seealso .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:11px;}
+.seealso .sa-group{margin-bottom:12px;}
+.seealso .sa-type{font-size:12px;font-weight:700;color:var(--text-soft);margin-bottom:6px;}
+.seealso a{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text-soft);border:1px solid var(--border);border-radius:8px;padding:5px 11px;margin:0 6px 6px 0;text-decoration:none;}
+.seealso a:hover{border-color:var(--accent);color:var(--accent);}
+.seealso .dot{width:7px;height:7px;border-radius:2px;flex:none;}
+.docmeta{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;font-size:12.5px;color:var(--text-muted);}
+.upd{display:flex;gap:16px;padding:13px 0;border-bottom:1px solid var(--border);}
+.upd-date{flex:none;width:120px;font-size:12.5px;color:var(--text-muted);}
+.upd-body a{font-weight:600;font-size:14px;text-decoration:none;color:var(--accent);}
+.upd-body a:hover{text-decoration:underline;}
+.upd-sum{font-size:13px;color:var(--text-soft);margin-top:3px;}
+.fb{margin-top:22px;padding:16px 0 0;}
+.fb .q{font-size:13.5px;font-weight:600;margin-bottom:9px;color:var(--text);}
+.fb .btns{display:flex;gap:8px;}
+.fb button{display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg-subtle);color:var(--text-soft);font-size:13px;font-weight:600;}
+.fb button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
+.fb .thanks{margin-top:8px;font-size:12.5px;color:var(--text-muted);}
+.home{max-width:960px;margin:0 auto;padding:46px 30px 90px;}
+.hero{text-align:center;margin-bottom:40px;}
+.hero h1{font-size:34px;margin:0 0 10px;}.hero p{font-size:16px;color:var(--text-soft);max-width:640px;margin:0 auto;}
+.sect{margin-bottom:34px;}
+.sect-h{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin:0 0 4px;}
+.sect-s{font-size:13px;color:var(--text-muted);margin:0 0 14px;}
+.prodgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.prodcard{border:1px solid var(--border);border-radius:14px;padding:18px;background:var(--surface);display:block;color:inherit;}
+a.prodcard:hover{border-color:var(--accent);box-shadow:var(--shadow);text-decoration:none;}
+.prodcard .nm{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px;margin-bottom:6px;}
+.prodcard .nm .sw{width:11px;height:11px;border-radius:4px;}
+.prodcard .pd{font-size:12.5px;color:var(--text-muted);margin-bottom:10px;min-height:40px;}
+.prodcard .go{font-size:12.5px;font-weight:600;color:var(--accent);}
+.prodcard.soon{opacity:.72;}
+.soonbadge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);border:1px solid var(--border);border-radius:5px;padding:1px 6px;margin-left:auto;}
+.structure{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px;}
+.structure span{font-size:10.5px;color:var(--text-muted);background:var(--bg-subtle);border:1px solid var(--border);border-radius:5px;padding:1px 7px;}
+.tutbanner{border:1px solid var(--accent);background:var(--accent-soft);border-radius:14px;padding:20px 22px;display:flex;align-items:center;gap:16px;}
+.tutbanner .cta{padding:9px 16px;border-radius:9px;background:var(--accent);color:#fff;font-weight:600;font-size:13.5px;border:none;}
+.commgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.commcard{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:12px;padding:15px 16px;background:var(--surface);color:inherit;text-decoration:none;}
+.commcard:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.commcard .ci{flex:none;width:34px;height:34px;border-radius:9px;background:var(--bg-subtle);color:var(--text-soft);display:flex;align-items:center;justify-content:center;}
+.commcard:hover .ci{color:var(--accent);}
+.commcard .cbody{min-width:0;flex:1;}
+.commcard .cn{display:block;font-weight:600;font-size:14px;color:var(--text);}
+.commcard .cr{display:block;font-size:12px;color:var(--text-muted);margin-top:1px;}
+.commcard .carr{flex:none;color:var(--text-muted);font-size:14px;}
+.searchfacets{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;}
+.searchfacets .fl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-right:2px;}
+.searchfacets .schip{padding:3px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:11.5px;font-weight:600;}
+.searchfacets .schip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+.searchfacets .sep{width:1px;height:16px;background:var(--border);margin:0 4px;}
+.lib{max-width:1000px;margin:0 auto;padding:40px 30px 90px;}
+.lib h1{font-size:28px;margin:0 0 6px;}.lib .sub{color:var(--text-soft);margin:0 0 22px;}
+.filters{display:flex;flex-wrap:wrap;gap:20px;padding:16px 18px;border:1px solid var(--border);border-radius:12px;background:var(--bg-subtle);margin-bottom:22px;}
+.fgroup .fh{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:8px;}
+.chips{display:flex;gap:7px;flex-wrap:wrap;}
+.chip{padding:5px 12px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:12px;font-weight:600;}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+.tutlist{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.tutcard{border:1px solid var(--border);border-radius:12px;padding:16px 18px;background:var(--surface);display:block;color:inherit;}
+.tutcard:hover{border-color:var(--accent);box-shadow:var(--shadow);text-decoration:none;}
+.tutcard .meta{display:flex;gap:7px;margin-bottom:9px;flex-wrap:wrap;}
+.tutcard .ct{font-weight:600;font-size:15px;margin-bottom:4px;color:var(--text);}
+.tutcard .cd{font-size:12.5px;color:var(--text-muted);}
+.badge{font-size:10.5px;font-weight:700;border-radius:6px;padding:2px 8px;}
+.empty{padding:40px;text-align:center;color:var(--text-muted);}
+.modal{position:fixed;inset:0;background:rgba(10,15,22,.45);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;}
+.modal[hidden]{display:none;}
+.searchbox{width:min(560px,92vw);background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;}
+.searchbox input{width:100%;border:none;padding:16px 18px;font-size:15px;background:transparent;color:var(--text);border-bottom:1px solid var(--border);}
+.searchbox input:focus{outline:none;}
+.results{max-height:52vh;overflow-y:auto;padding:8px;}
+.result{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:9px;color:inherit;}
+.result:hover,.result.act{background:var(--bg-subtle);text-decoration:none;}
+.result .rt{font-weight:600;font-size:13.5px;color:var(--text);}.result .rc{font-size:11.5px;color:var(--text-muted);}
+.searchfoot{padding:10px 16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-muted);display:flex;justify-content:space-between;}
+.placeholder{max-width:640px;margin:60px auto;text-align:center;padding:0 24px;}
+.placeholder h1{font-size:24px;margin-bottom:10px;}.placeholder p{color:var(--text-soft);}
+.site-footer{border-top:1px solid var(--border);background:var(--bg-subtle);margin-top:20px;}
+.ft-inner{max-width:var(--page-max);margin:0 auto;padding:18px 24px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between;}
+.ft-note{font-size:12.5px;color:var(--text-muted);}
+.ft-links{display:flex;align-items:center;gap:14px;font-size:12.5px;}
+.ft-ai{display:inline-flex;align-items:center;color:var(--text-soft);font-weight:600;}
+.ft-links a{color:var(--accent);font-family:var(--font-mono);font-size:12px;}
+@media(max-width:1000px){.shell{grid-template-columns:1fr;}.sidebar{display:none;}.content-wrap{grid-template-columns:1fr;}.toc{display:none;}.prodgrid,.tutlist,.commgrid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">本文へスキップ / Skip to content</a>
+<div id="app"></div>
+<div class="modal" id="searchModal" hidden>
+  <div class="searchbox" role="dialog" aria-modal="true" aria-label="Search">
+    <input id="searchInput" type="text" autocomplete="off" placeholder="…">
+    <div class="searchfacets" id="searchFacets"></div>
+    <div class="results" id="searchResults"></div>
+    <div class="searchfoot"><span id="searchHint"></span><span>esc</span></div>
+  </div>
+</div>
+<script>
+"use strict";
+var S={route:"home",product:"cms",lang:"ja",dark:false,tut:{product:[],audience:[]},sf:{product:[],type:[]},fb:{},collapsed:{}};
+function L(o){return o&&o[S.lang]!=null?o[S.lang]:(o?o.en:"");}
+var T={
+  docs:{en:"Docs",ja:"ドキュメント"},search:{en:"Search docs…",ja:"ドキュメントを検索…"},onThisPage:{en:"On this page",ja:"このページの内容"},
+  products:{en:"Products",ja:"製品"},productsSub:{en:"Each product has an overview, concepts, how-to guides and reference.",ja:"各製品にオーバービュー・コンセプト・ハウツーガイド・リファレンスがあります。"},
+  dev:{en:"Developer resources",ja:"開発者向けリソース"},devTab:{en:"Developer",ja:"開発者向け"},
+  community:{en:"Community",ja:"コミュニティ"},communitySub:{en:"Ask questions, share what you built, and meet others working with Re:Earth.",ja:"質問する、作ったものを共有する、Re:Earth を使う他の人とつながる。"},openExt:{en:"Open",ja:"開く"},
+  devSub:{en:"Separate sites for building on Re:Earth — each with its own overview, guides and API reference. Authored by the Solution Engineering team.",ja:"Re:Earth 上に構築するための独立サイト群。各サイトが独自のオーバービュー・ガイド・API リファレンスを持ちます。Solution Engineering チームが執筆します。"},
+  tutorials:{en:"Tutorials",ja:"チュートリアル"},tutSub:{en:"Hands-on lessons across every product — filter by product and audience.",ja:"全製品を横断するハンズオン。製品と対象読者で絞り込めます。"},
+  browseTut:{en:"Browse tutorials",ja:"チュートリアル一覧へ"},getStarted:{en:"Get started",ja:"はじめる"},comingSoon:{en:"Coming soon",ja:"近日公開"},soon:{en:"soon",ja:"準備中"},
+  prev:{en:"Previous",ja:"前のページ"},next:{en:"Next",ja:"次のページ"},seeAlso:{en:"See also",ja:"参照"},relTut:{en:"Related tutorials",ja:"関連するチュートリアル"},tryNext:{en:"What to try next",ja:"次にやってみよう"},
+  updated:{en:"Updated",ja:"更新日"},report:{en:"Report an issue",ja:"問題を報告"},
+  helpful:{en:"Was this page helpful?",ja:"このページは役に立ちましたか？"},yes:{en:"Yes",ja:"はい"},no:{en:"No",ja:"いいえ"},thanks:{en:"Thanks — your feedback reaches the docs team.",ja:"フィードバックありがとうございます。ドキュメントチームに届きます。"},
+  filterProduct:{en:"Product",ja:"製品"},filterAudience:{en:"Audience",ja:"対象読者"},filterType:{en:"Type",ja:"型"},user:{en:"User",ja:"ユーザー"},developer:{en:"Developer",ja:"開発者"},
+  searchAll:{en:"All",ja:"すべて"},resultCount:{en:"results",ja:"件"},
+  anchorLabel:{en:"Link to this section",ja:"この見出しへのリンク"},
+  openapiNote:{en:"This API reference is generated automatically from the OpenAPI spec, so it always matches the deployed API.",ja:"この API リファレンスは OpenAPI 仕様から自動生成されており、公開中の API と常に一致します。"},
+  aiReady:{en:"Built for AI readers",ja:"AI 読者に対応"},llmsFull:{en:"Full text for LLMs",ja:"LLM 向け全文"},footNote:{en:"This site publishes machine-readable text for LLMs and AI agents.",ja:"このサイトは LLM・AI エージェント向けの機械可読テキストを配信しています。"},
+  noTut:{en:"No tutorials match. Clear a filter.",ja:"該当なし。フィルタを外してください。"},searchMock:{en:"Prototype — search is illustrative",ja:"プロトタイプ — 検索は説明用のモック"},
+  stubBody:{en:"This article is in preparation — its outline is agreed and drafting is underway.",ja:"この記事は準備中です（章立ては確定済み、執筆中）。"},
+  staleBody:{en:"This page may be outdated and is being reviewed.",ja:"このページは内容が古い可能性があり、確認中です。"}
+};
+var DIA={tutorial:{label:{en:"Tutorial",ja:"チュートリアル"}},howto:{label:{en:"How-to guide",ja:"ハウツーガイド"}},reference:{label:{en:"Reference",ja:"リファレンス"}},concepts:{label:{en:"Concepts",ja:"コンセプト"}}};
+function diaColor(k){return "var(--t-"+k+")";}function diaSoft(k){return "var(--t-"+k+"-soft)";}
+var TABTITLE={"overview":{en:"Overview",ja:"オーバービュー"},"whats-new":{en:"What's new",ja:"更新情報"},"concepts":{en:"Concepts",ja:"コンセプト"},"how-to":{en:"How-to guides",ja:"ハウツーガイド"},"guides":{en:"Guides",ja:"ガイド"},"get-started":{en:"Get started",ja:"はじめかた"},"reference":{en:"Reference",ja:"リファレンス"},"examples":{en:"Examples",ja:"サンプル"},"tools":{en:"Tools",ja:"ツール"},"support":{en:"Support",ja:"サポート"}};
+var TAB_DIA={"concepts":"concepts","how-to":"howto","guides":"howto","reference":"reference","get-started":"tutorial"};
+var GRPLABEL={modeling:{en:"Modeling",ja:"モデリング"},content:{en:"Content",ja:"コンテンツ"},publish:{en:"Projects & access",ja:"公開・権限"},ops:{en:"Operation & integration",ja:"運用・連携"}};
+var HUB={
+  heading:{en:"Where to start",ja:"目的に応じて選ぶ"},
+  sub:{en:"Pick the one closest to what you're trying to do right now.",ja:"今の目的に近いものを選んでください。"},
+  tutorial:{t:{en:"Learn by doing",ja:"手を動かして学ぶ"},d:{en:"Follow a short, hands-on tutorial and build your first thing.",ja:"短いチュートリアルに沿って、実際に手を動かしながら最初の一つを作ります。"},cta:{en:"Start the tutorial",ja:"チュートリアルを始める"}},
+  getstarted:{t:{en:"Get started",ja:"はじめる"},d:{en:"Walk through the first steps you need, such as issuing a key and making your first call.",ja:"APIキーの発行や最初の呼び出しなど、最初に必要な手順を確認します。"},cta:{en:"See how to get started",ja:"はじめかたを見る"}},
+  concepts:{t:{en:"Understand how it works",ja:"仕組みを理解する"},d:{en:"Read the ideas behind the design before you start building.",ja:"作り始める前に、設計の考え方や背景を押さえます。"},cta:{en:"Read Concepts",ja:"コンセプトを読む"}},
+  howto:{t:{en:"Do a specific task",ja:"特定の操作をする"},d:{en:"Goal-oriented steps for a task you already have in mind.",ja:"すでにやりたいことが決まっている場合の、目的別の手順です。"},cta:{en:"Browse the guides",ja:"ガイドを見る"}},
+  examples:{t:{en:"See examples",ja:"サンプルを見る"},d:{en:"Browse real examples to find one close to your case.",ja:"実際の構成例から、自分のケースに近いものを探します。"},cta:{en:"Open examples",ja:"サンプルを開く"}},
+  reference:{t:{en:"Look up a detail",ja:"詳細な仕様を調べる"},d:{en:"Field types, API and settings — each entry is self-contained.",ja:"フィールド型・API・設定など、項目ごとに自己完結した仕様です。"},cta:{en:"Open Reference",ja:"リファレンスを開く"}}
+};
+var SECTIONS={
+  visualizer:{name:{en:"Re:Earth Visualizer",ja:"Re:Earth Visualizer"},kind:"product",sw:"var(--c-visualizer)",accent:"visualizer",live:true,desc:{en:"Build, style and publish interactive 2D/3D maps and data stories — no code required.",ja:"コード不要で、インタラクティブな2D/3D地図とデータストーリーを作成・公開。"},tabs:["overview","whats-new","concepts","how-to","reference"]},
+  cms:{name:{en:"Re:Earth CMS",ja:"Re:Earth CMS"},kind:"product",sw:"var(--c-cms)",accent:"cms",live:true,desc:{en:"A headless CMS purpose-built for geospatial data — model schemas, manage assets and serve them via API.",ja:"地理空間データ向けのヘッドレスCMS。スキーマ定義・アセット管理・API配信を一貫して行えます。"},tabs:["overview","whats-new","concepts","how-to","reference"]},
+  flow:{name:{en:"Re:Earth Flow",ja:"Re:Earth Flow"},kind:"product",sw:"var(--c-flow)",accent:"flow",live:false,desc:{en:"A no-code ETL tool for automated spatial-data workflows at scale.",ja:"空間データを大規模に変換する自動ワークフローをノーコードで構築するETL。"}},
+  dashboard:{name:{en:"Re:Earth Dashboard",ja:"Re:Earth Dashboard"},kind:"product",sw:"var(--c-dashboard)",accent:"dashboard",live:false,desc:{en:"The platform layer for Re:Earth — projects, workspaces, members and enterprise features.",ja:"Re:Earth のプラットフォーム基盤。プロジェクト・ワークスペース・メンバー・エンタープライズ機能。"}},
+  vplugin:{name:{en:"Visualizer Plugin",ja:"Visualizer プラグイン"},kind:"dev",accent:"visualizer",live:true,desc:{en:"Extend Visualizer with plugins — Widgets, Infobox and Story blocks.",ja:"Visualizer をプラグインで拡張（Widget・Infobox・Story ブロック）。"},structure:["Overview","Get Started","Guides","Examples","API Reference","Tools","Support"],tabs:["overview","get-started","guides","examples","reference","tools","support"]},
+  cmsdev:{name:{en:"CMS Developer",ja:"CMS 開発者向け"},kind:"dev",accent:"cms",live:true,desc:{en:"Public API and Integration API for Re:Earth CMS — read, write and automate content.",ja:"Re:Earth CMS の Public API と Integration API。コンテンツの取得・書き込み・自動化。"},structure:["Overview","Get Started","Guides","Examples","API Reference","Tools","Support"],tabs:["overview","get-started","guides","examples","reference","tools","support"]},
+  flowdev:{name:{en:"Flow Developer",ja:"Flow 開発者向け"},kind:"dev",accent:"flow",live:false,desc:{en:"Building data-transformation workflows with Flow. Planned after the Flow release.",ja:"Flow でデータ変換ワークフローを構築。Flow リリース後に整備予定。"},structure:["Overview","Get Started","Guides","Examples","Reference","Support"]}
+};
+var PRODUCT_LIST=["visualizer","cms","flow","dashboard"];
+var DEV_LIST=["vplugin","cmsdev","flowdev"];
+function sec(id){return SECTIONS[id]||null;}
+function secName(id){var s=sec(id);return s?L(s.name):id;}
+var PAGES={};
+function stub(k,secId,tab,type,title,refs){PAGES[k]={section:secId,tab:tab,type:type,stub:true,title:title,refs:refs||null};}
+// ===== CMS =====
+PAGES["cms/overview"]={section:"cms",tab:"overview",title:{en:"Re:Earth CMS",ja:"Re:Earth CMS"},lead:{en:"A headless, geospatial-first CMS. The same structured content feeds a map, a table and an integration at once.",ja:"地理空間を第一に考えたヘッドレスCMS。同じ構造化コンテンツが、地図・テーブル・外部連携に同時に使えます。"},updated:{en:"July 8, 2026",ja:"2026年7月8日"},
+  body:function(){return "<p>"+L({en:"Model your data once, then serve it everywhere.",ja:"データを一度モデル化すれば、どこにでも配信できます。"})+"</p>"+overviewHub("cms");}};
+PAGES["cms/c-schema"]={section:"cms",tab:"concepts",type:"concepts",title:{en:"Decide your model structure first",ja:"モデルの構造を先に決める"},lead:{en:"Deciding the shape of your data before you enter anything sets the quality of everything that follows — input, search and delivery.",ja:"何かを入れ始める前にデータの形を決めることが、その後の入力・検索・配信の質を決めます。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  body:function(){return "<p>"+L({en:"A <b>model</b> is the shape your data takes — which fields it has and how each is typed. Decide it up front: the structure you choose determines how well you can input, search and deliver that data later.",ja:"<b>モデル</b>はデータの形（どんなフィールドを持ち、どう型付けするか）です。先に決めます。選んだ構造が、後の入力・検索・配信のしやすさを左右します。"})+"</p>";},next:"cms/c-relations",refs:["cms/r-models","cms/r-fields"]};
+PAGES["cms/c-relations"]={section:"cms",tab:"concepts",type:"concepts",title:{en:"Connect one model to another",ja:"モデルとモデルをつなぐ"},lead:{en:"Treating separate data units as references that point to each other lets you split models instead of cramming everything into one.",ja:"複数のデータ単位を互いに指し示す参照として扱うと、すべてを1つに詰め込まずモデルを分けて設計できます。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  body:function(){return "<p>"+L({en:"Rather than one huge model, keep separate units — say City and Facility — in their own models and link them by <b>reference</b>. Each model stays focused and reusable.",ja:"1つの巨大なモデルにせず、別々の単位（例：都市と施設）を各モデルに保ち、<b>参照</b>でつなぎます。各モデルが焦点を保ち再利用しやすくなります。"})+"</p>";},next:"cms/c-validation",refs:["cms/r-models"]};
+PAGES["cms/c-validation"]={section:"cms",tab:"concepts",type:"concepts",title:{en:"Decide input rules first",ja:"入力ルールを先に決める"},lead:{en:"Rules that reject invalid data at input time decide the quality of your day-to-day operation.",ja:"不正なデータを入力時点ではじく仕組みが、日々の運用の質を決めます。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  body:function(){return "<p>"+L({en:"Deciding validation up front — required fields, allowed values, formats — stops bad data from entering in the first place, rather than cleaning it up later.",ja:"必須・許容値・形式などのバリデーションを先に決めると、後から直すのではなく、そもそも悪いデータが入らないようにできます。"})+"</p>";},next:"cms/c-metadata",refs:["cms/r-attributes"]};
+PAGES["cms/c-metadata"]={section:"cms",tab:"concepts",type:"concepts",title:{en:"Separate content from management data",ja:"本体と管理情報を分ける"},lead:{en:"Keeping management data apart from the content body's own schema keeps responsibilities clear.",ja:"管理用データを本体スキーマとは別に持つことで、責務を切り分けます。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  body:function(){return "<p>"+L({en:"Who edited it, when, and its status are <b>management data</b> — keep them separate from the content body's fields so each has one clear responsibility.",ja:"誰がいつ編集したか、状態はどうか、は<b>管理情報</b>です。本体のフィールドと分けて持ち、それぞれの責務を1つに保ちます。"})+"</p>";},next:"cms/c-asset-field",refs:[]};
+PAGES["cms/c-asset-field"]={section:"cms",tab:"concepts",type:"concepts",title:{en:"Assets vs. fields",ja:"アセットとフィールドの違い"},lead:{en:"A structured field and a file-based asset are handled differently — knowing which is which tells you where a piece of data belongs.",ja:"構造化データのフィールドと、ファイルとしてのアセットは扱い方が違います。この違いが、データをどちらで持つかの判断になります。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  body:function(){return "<p>"+L({en:"Text, numbers and dates live in <b>fields</b>; images, GeoJSON and PDFs live as <b>assets</b> and are referenced from a field. Match the data to the right one.",ja:"テキスト・数値・日付は<b>フィールド</b>に、画像・GeoJSON・PDF は<b>アセット</b>として持ち、フィールドから参照します。データに合った方を選びます。"})+"</p>";},next:"cms/c-delivery",refs:["cms/r-fields"]};
+PAGES["cms/c-delivery"]={section:"cms",tab:"concepts",type:"concepts",title:{en:"How delivery works",ja:"配信のしくみ"},lead:{en:"There are two ways data made in the CMS becomes usable outside: the CMS's own publish/delivery, and retrieval through an API.",ja:"CMS 内で作ったデータを外部から使える形にする仕組みには、CMS 機能としての公開・配信と、API 経由の取得の2種類があります。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  toc:[{id:"d-two",l:{en:"Two paths out",ja:"2つの出口"}}],
+  body:function(){return "<h2 id=\"d-two\">"+L({en:"Two paths out",ja:"外に出る2つの道"})+"</h2><p>"+L({en:"Content leaves the CMS in two ways: the CMS's own publish/delivery, and retrieval through an API. They serve different consumers, so it helps to know which you are using.",ja:"コンテンツが CMS から出る道は2つあります。CMS 自身の公開・配信と、API 経由の取得です。届け先が異なるため、どちらを使っているかを意識します。"})+"</p>";},next:"cms/c-publish-deliver",refs:["cms/howto-manage"]};
+PAGES["cms/c-publish-deliver"]={section:"cms",tab:"concepts",type:"concepts",title:{en:"\"Publish\" vs. \"deliver\"",ja:"「公開」と「配信」の違い"},lead:{en:"Setting an item to published in the CMS auto-delivers it; fetching it through the API is a separate mechanism.",ja:"CMS の設定で公開状態にすると自動で配信される仕組みと、API 経由で取得する仕組みは別のものです。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  body:function(){return "<p>"+L({en:"\"Publish\" is a state you set in the CMS UI; \"deliver\" is how a consumer gets the data. Publishing can trigger delivery, but an API fetch is a different path — keeping them distinct avoids confusion.",ja:"「公開」は CMS の UI で設定する状態、「配信」は受け手がデータを得る経路です。公開が配信を引き起こすこともありますが、API 取得は別の道です。区別すると混乱を防げます。"})+"</p>";},next:"cms/c-operation",refs:["cms/c-delivery"]};
+PAGES["cms/c-operation"]={section:"cms",tab:"concepts",type:"concepts",title:{en:"How day-to-day operation works",ja:"運用のしくみ"},lead:{en:"Operation is running your data as an ongoing part of daily work — the continuous cycle of use that follows the one-time act of designing it.",ja:"運用は、作ったデータを日々の業務として動かし続ける営みです。1回の設計（作る）に対して、継続的な使用のサイクルが続きます。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  body:function(){return "<p>"+L({en:"Designing the data is a one-time act; operating it is continuous — state changes, review and approval, versioning and comments. This article gives the overview; the details live in How-to and Reference.",ja:"データの設計は1回きり、運用は継続的です（状態遷移・変更承認・バージョン管理・コメント等）。この記事は概要で、詳細は How-to と Reference にあります。"})+"</p>";},refs:["cms/howto-manage"]};
+PAGES["cms/howto-manage"]={section:"cms",tab:"how-to",type:"howto",title:{en:"Manage content items",ja:"コンテンツアイテムを管理する"},lead:{en:"Goal-oriented steps to create, edit and bulk-update items. Assumes a model with fields exists.",ja:"アイテムの作成・編集・一括更新の手順。フィールドを持つモデルがある前提です。"},updated:{en:"July 2, 2026",ja:"2026年7月2日"},
+  toc:[{id:"h-create",l:{en:"Create",ja:"作成"}},{id:"h-edit",l:{en:"Edit & version",ja:"編集とバージョン"}},{id:"h-bulk",l:{en:"Bulk actions",ja:"一括操作"}}],
+  body:function(){return "<h2 id=\"h-create\">"+L({en:"Create an item",ja:"アイテムを作成する"})+"</h2><p>"+L({en:"Open <b>Content</b>, select your model, click <b>+ New item</b>, fill fields, then Save draft or Publish.",ja:"<b>コンテンツ</b>を開きモデルを選択、<b>＋新規アイテム</b>で入力し、下書き保存または公開します。"})+"</p><h2 id=\"h-edit\">"+L({en:"Edit & version",ja:"編集とバージョン管理"})+"</h2><p>"+L({en:"Editing creates a new draft version; earlier versions stay in history.",ja:"編集で新しい下書き版が作られ、以前の版は履歴に残ります。"})+"</p><h2 id=\"h-bulk\">"+L({en:"Bulk actions",ja:"一括操作"})+"</h2><p>"+L({en:"Select rows and publish, tag or delete many at once.",ja:"行を選択して公開・タグ付け・削除を一括適用します。"})+"</p>";},next:"cms/c-operation",refs:["cms/r-fields","cms/c-schema"]};
+PAGES["cms/r-fields"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field types",ja:"フィールド型"},lead:{en:"The kinds of input fields you can add to a model. Each entry is self-contained — copy its anchor to cite it directly.",ja:"モデルに設けられる入力欄の種類。各項目は自己完結し、アンカーで直接引用できます。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},stale:true,isRefCms:true,refs:["cms/c-schema"]};
+PAGES["cms/r-attributes"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field attributes",ja:"フィールド属性"},lead:{en:"The rules you can set on each field.",ja:"各入力欄に付けられるルール。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},
+  body:function(){var A=[["Required",{en:"The field must have a value.",ja:"値が必須。"}],["Unique",{en:"No duplicate values across items.",ja:"アイテム間で重複を禁止。"}],["Multiple",{en:"Allow several values in one field.",ja:"1つの欄に複数値を許可。"}],["Use as title",{en:"Treat this field as the item's title.",ja:"この欄をアイテムのタイトルとして扱う。"}]];return A.map(function(a,i){return '<section class="refitem" id="a-'+i+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3>'+a[0]+'</h3></div><p style="margin:0;color:var(--text-soft);font-size:14px">'+L(a[1])+'</p></section>';}).join("");},refs:["cms/r-fields","cms/c-validation"]};
+PAGES["cms/r-models"]={section:"cms",tab:"reference",type:"reference",title:{en:"Models",ja:"モデル"},lead:{en:"The mechanism for defining a content type (a data container) — naming, keys, and export formats such as CSV and JSON.",ja:"コンテンツの型（データの入れ物）を定義する仕組み。名前・キー・CSV/JSON 等の書き出し形式。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},
+  body:function(){return "<p>"+L({en:"A model groups fields under a name and a key. Its items can be exported as CSV or JSON. To design one well, see",ja:"モデルはフィールドを名前とキーでまとめます。アイテムは CSV / JSON で書き出せます。設計の考え方は"})+" <a href=\"#\" data-route=\"cms/c-schema\">"+L({en:"model structure",ja:"モデルの構造"})+"</a>"+L({en:".",ja:"を参照。"})+"</p>";},refs:["cms/c-schema"]};
+[
+  {k:"cms/r-groups",t:{en:"Groups",ja:"グループ"},d:{en:"Bundle several fields together so they can be reused as a unit.",ja:"複数のフィールドをひとまとまりにして、単位として再利用する仕組み。"},refs:["cms/c-schema"]},
+  {k:"cms/r-schema",t:{en:"Schema",ja:"スキーマ"},d:{en:"Structural settings of a model, such as which field is treated as the title.",ja:"どの欄をタイトルとして扱うか等、モデルの構造にかかわる設定。"},refs:["cms/c-schema"]},
+  {k:"cms/r-items",t:{en:"Items",ja:"アイテム"},d:{en:"The individual records registered in a model, and their states (draft, published, and so on — 5 states).",ja:"モデルに登録される1件ごとのデータと、その状態（下書き・公開など5種）。"},refs:["cms/howto-manage"]},
+  {k:"cms/r-itemviews",t:{en:"Item views",ja:"アイテムビュー"},d:{en:"Saved settings for how an item list is shown: sort order, filters and visible columns.",ja:"アイテム一覧の見せ方（並び順・絞り込み・表示列）を保存する仕組み。"}},
+  {k:"cms/r-filters",t:{en:"Item filters and sorting",ja:"アイテムフィルタ・ソート"},d:{en:"The conditions and operators (about 35) for filtering and sorting a list.",ja:"一覧を絞り込む・並べ替えるときの条件や演算子（約35種）。"}},
+  {k:"cms/r-assets",t:{en:"Assets and supported formats",ja:"アセット・対応形式"},d:{en:"Files you can upload (images, video, documents), preview types and supported formats.",ja:"アップロードできるファイル（画像・動画・書類等）とプレビュー種別・対応形式。"},refs:["cms/c-asset-field"]},
+  {k:"cms/r-projects",t:{en:"Projects and publication settings",ja:"プロジェクト・公開設定"},d:{en:"Per-project public/private and limit settings.",ja:"プロジェクト単位の公開／非公開や上限の設定。"},refs:["cms/c-delivery"]},
+  {k:"cms/r-workspaces",t:{en:"Workspaces and member roles",ja:"ワークスペース・メンバーロール"},d:{en:"The permissions of members invited to a workspace (4 roles).",ja:"ワークスペースに招待したメンバーの権限（4種のロール）。"}},
+  {k:"cms/r-wssettings",t:{en:"Workspace settings and tiles/terrain",ja:"ワークスペース設定・タイル/地形"},d:{en:"Workspace-wide settings such as map base tiles (6) and terrain (2).",ja:"地図の背景タイル（6種）や地形（2種）などワークスペース共通の設定。"}},
+  {k:"cms/r-requests",t:{en:"Requests and review",ja:"リクエスト・レビュー"},d:{en:"Submitting content for review and approval before publishing (4 request states).",ja:"公開前に内容を申請し、レビュー・承認を経て反映する仕組み（申請状態4種）。"},refs:["cms/c-operation"]},
+  {k:"cms/r-comments",t:{en:"Comments",ja:"コメント"},d:{en:"Adding comments to items, assets and requests.",ja:"アイテム・アセット・申請にコメントを付けてやり取りする機能。"}},
+  {k:"cms/r-webhooks",t:{en:"Webhooks",ja:"Webhook"},d:{en:"Settings for sending automatic notifications to external systems on specified events.",ja:"指定イベント発生時に外部へ自動通知を送る設定。"}},
+  {k:"cms/r-integrations",t:{en:"Integrations",ja:"インテグレーション"},d:{en:"Registering and setting up connections with external services.",ja:"外部サービスと連携するための登録・設定。"}},
+  {k:"cms/r-import",t:{en:"Import",ja:"インポート"},d:{en:"Bulk-importing external data, plus its progress/status (5 states) and how to cancel.",ja:"外部データの一括取り込みと、進捗・状態（5種）・中止のしかた。"}}
+].forEach(function(e){PAGES[e.k]={section:"cms",tab:"reference",type:"reference",title:e.t,lead:e.d,updated:{en:"June 28, 2026",ja:"2026年6月28日"},refs:e.refs||null};});
+PAGES["cms/whatsnew"]={section:"cms",tab:"whats-new",title:{en:"What's new — CMS",ja:"更新情報 — CMS"},lead:{en:"Documentation update history for Re:Earth CMS — newest first.",ja:"Re:Earth CMS のドキュメント更新履歴（新しい順）。"},updated:{en:"July 10, 2026",ja:"2026年7月10日"},
+  body:function(){return updateLog([
+    {date:{en:"July 10, 2026",ja:"2026年7月10日"},route:"cms/c-schema",sum:{en:"Added the Concepts article on deciding model structure.",ja:"コンセプト「モデルの構造を先に決める」を追加。"}},
+    {date:{en:"July 4, 2026",ja:"2026年7月4日"},route:"cms/c-delivery",sum:{en:"Rewrote how delivery works and split publish vs. deliver into its own article.",ja:"「配信のしくみ」を改稿し、「公開」と「配信」の違いを別記事に分離。"}},
+    {date:{en:"July 2, 2026",ja:"2026年7月2日"},route:"cms/howto-manage",sum:{en:"Added bulk actions to the item management guide.",ja:"「アイテムを管理する」に一括操作を追記。"}},
+    {date:{en:"June 28, 2026",ja:"2026年6月28日"},route:"cms/r-fields",sum:{en:"Documented the Geometry (Editor) field type.",ja:"フィールド型に Geometry (Editor) を追記。"}}
+  ]);}};
+PAGES["cms/tutorial-getstarted"]={section:"cms",type:"tutorial",standalone:true,title:{en:"Get started with CMS",ja:"CMSをはじめる"},lead:{en:"Create your first model, add a field and publish an item — about 12 minutes. No prior CMS experience needed.",ja:"最初のモデルを作り、フィールドを追加し、アイテムを公開するまで約12分。CMSの経験は不要です。"},est:{en:"12 min",ja:"12分"},prereq:"cms/c-schema",updated:{en:"July 8, 2026",ja:"2026年7月8日"},
+  toc:[{id:"s1",l:{en:"1 · Create a model",ja:"1 · モデル作成"}},{id:"s2",l:{en:"2 · Add fields",ja:"2 · フィールド追加"}},{id:"s3",l:{en:"3 · Publish",ja:"3 · 公開"}}],
+  body:function(){return "<div class=\"note\"><span>ℹ️</span><div><b>"+L({en:"Before you start:",ja:"はじめる前に："})+"</b> "+L({en:"new to the model? Read",ja:"モデルが初めてなら"})+" <a href=\"#\" data-route=\"cms/c-schema\">"+L({en:"Decide your model structure first",ja:"モデルの構造を先に決める"})+"</a> "+L({en:"— it explains the why.",ja:"を読むと「なぜ」が分かります。"})+"</div></div><h2 id=\"s1\">"+L({en:"Step 1 · Create a model",ja:"ステップ1 · モデルを作成"})+"</h2><p>"+L({en:"A <b>model</b> is a blueprint — a \"Landmark\", a \"Bus stop\", a \"Flood zone\". Open <b>Schema</b> and click <b>+ New model</b>.",ja:"<b>モデル</b>は設計図です（「ランドマーク」「バス停」「浸水区域」）。<b>スキーマ</b>で<b>＋新規モデル</b>。"})+"</p><h2 id=\"s2\">"+L({en:"Step 2 · Add fields",ja:"ステップ2 · フィールドを追加"})+"</h2><p>"+L({en:"Add a <code>Text</code> field and a <code>Geometry (Editor)</code> field. The",ja:"<code>Text</code>型と<code>Geometry (Editor)</code>型を追加。"})+" <a href=\"#\" data-route=\"cms/r-fields\">"+L({en:"field types reference",ja:"フィールド型のリファレンス"})+"</a> "+L({en:"lists them all.",ja:"に全種類が載っています。"})+"</p><h2 id=\"s3\">"+L({en:"Step 3 · Publish an item",ja:"ステップ3 · アイテムを公開"})+"</h2><p>"+L({en:"Add an item and hit <b>Publish</b>. It is now served by the API:",ja:"アイテムを追加して<b>公開</b>。APIから配信されます："})+"</p><div class=\"codeblock\"><div><span class=\"k\">GET</span> https://api.reearth.io/cms/v1/projects/{id}/models/landmark/items</div></div>";},refs:["cms/c-schema","cms/r-fields"]};
+// ===== Visualizer =====
+PAGES["visualizer/overview"]={section:"visualizer",tab:"overview",title:{en:"Re:Earth Visualizer",ja:"Re:Earth Visualizer"},lead:{en:"Build, style and publish interactive 2D/3D maps — from a disaster briefing to an urban-planning story.",ja:"インタラクティブな2D/3D地図を作成・公開。防災ブリーフィングから都市計画のストーリーまで。"},updated:{en:"July 5, 2026",ja:"2026年7月5日"},
+  body:function(){return "<p>"+L({en:"Bring CMS content onto a map.",ja:"CMSのコンテンツを地図に載せます。"})+"</p>"+overviewHub("visualizer");}};
+PAGES["visualizer/whatsnew"]={section:"visualizer",tab:"whats-new",title:{en:"What's new — Visualizer",ja:"更新情報 — Visualizer"},lead:{en:"Documentation update history for Re:Earth Visualizer — newest first.",ja:"Re:Earth Visualizer のドキュメント更新履歴（新しい順）。"},updated:{en:"July 5, 2026",ja:"2026年7月5日"},body:function(){return updateLog([
+    {date:{en:"July 5, 2026",ja:"2026年7月5日"},route:"visualizer/tutorial-firstmap",sum:{en:"Added the tutorial on publishing your first map.",ja:"チュートリアル「最初の地図を公開する」を追加。"}},
+    {date:{en:"July 1, 2026",ja:"2026年7月1日"},route:"visualizer/concepts-layers",sum:{en:"Added the Concepts article on layers and scenes.",ja:"コンセプト「レイヤーとシーン」を追加。"}}
+  ]);}};
+PAGES["visualizer/concepts-layers"]={section:"visualizer",tab:"concepts",type:"concepts",title:{en:"Layers & scenes",ja:"レイヤーとシーン"},lead:{en:"How a Visualizer map is composed from data layers and a saved scene.",ja:"Visualizerの地図がデータレイヤーと保存シーンからどう構成されるか。"},updated:{en:"July 1, 2026",ja:"2026年7月1日"},
+  body:function(){return "<p>"+L({en:"A <b>layer</b> binds one data source to a visual style; a <b>scene</b> is the saved arrangement you publish. Separating data from style lets the same flood-zone data render as a bold overlay in one scene and a subtle outline in another.",ja:"<b>レイヤー</b>はデータソースを見た目に結び付け、<b>シーン</b>は公開する保存済み構成です。データと見た目を分けるから、同じ浸水区域データが、あるシーンでは濃い塗り、別のシーンでは控えめな輪郭になります。"})+"</p>";},next:"visualizer/tutorial-firstmap",refs:["cms/c-schema"]};
+PAGES["visualizer/tutorial-firstmap"]={section:"visualizer",type:"tutorial",standalone:true,title:{en:"Publish your first map",ja:"最初の地図を公開する"},lead:{en:"Load a dataset, style a layer and publish a shareable scene — about 10 minutes.",ja:"データを読み込み、レイヤーをスタイリングして共有シーンを公開。約10分。"},est:{en:"10 min",ja:"10分"},prereq:"visualizer/concepts-layers",updated:{en:"July 5, 2026",ja:"2026年7月5日"},
+  body:function(){return "<div class=\"note\"><span>ℹ️</span><div><b>"+L({en:"Before you start:",ja:"はじめる前に："})+"</b> "+L({en:"skim",ja:"まず"})+" <a href=\"#\" data-route=\"visualizer/concepts-layers\">"+L({en:"Layers & scenes",ja:"レイヤーとシーン"})+"</a>"+L({en:".",ja:"に目を通してください。"})+"</div></div><p>"+L({en:"Import a GeoJSON of evacuation sites, style them by capacity, and publish. Your scene now has a shareable URL.",ja:"避難所の GeoJSON を読み込み、収容人数でスタイリングして公開。共有用URLが付きます。"})+"</p>";},refs:["visualizer/concepts-layers"]};
+// ===== Developer: Visualizer Plugin =====
+PAGES["vplugin/overview"]={section:"vplugin",tab:"overview",title:{en:"Visualizer Plugin",ja:"Visualizer プラグイン"},lead:{en:"Extend Re:Earth Visualizer with plugins that add UI and behaviour.",ja:"UI や振る舞いを足すプラグインで Re:Earth Visualizer を拡張します。"},updated:{en:"July 3, 2026",ja:"2026年7月3日"},
+  toc:[{id:"o-what",l:{en:"What is a plugin",ja:"プラグインとは"}},{id:"o-system",l:{en:"Plugin system",ja:"仕組み"}},{id:"o-types",l:{en:"Extension types",ja:"拡張タイプ"}}],
+  body:function(){return "<h2 id=\"o-what\">"+L({en:"What is a plugin?",ja:"プラグインとは"})+"</h2><p>"+L({en:"A plugin adds custom UI and behaviour to Visualizer — a widget in the corner, a block inside an infobox, or a step in a story.",ja:"プラグインは Visualizer にカスタム UI と振る舞いを足します（隅のウィジェット、インフォボックス内のブロック、ストーリーの1ステップ等）。"})+"</p><h2 id=\"o-system\">"+L({en:"Plugin system (WASM + iframe)",ja:"Plugin System（WASM + iframe）"})+"</h2><p>"+L({en:"Plugin code runs sandboxed in an iframe and talks to Visualizer through a message API, so a plugin can't break the host app.",ja:"プラグインのコードは iframe 内でサンドボックス実行され、メッセージ API で Visualizer とやり取りします。ホストを壊しません。"})+"</p><h2 id=\"o-types\">"+L({en:"Extension types",ja:"拡張タイプ"})+"</h2><ul><li><b>Widget</b> — "+L({en:"floating UI on the map.",ja:"地図上の浮遊 UI。"})+"</li><li><b>Infobox Block</b> — "+L({en:"content shown when a feature is selected.",ja:"フィーチャー選択時の内容。"})+"</li><li><b>Story Block</b> — "+L({en:"a step in a scrollytelling story.",ja:"スクロールテリングの1ステップ。"})+"</li></ul>"+overviewHub("vplugin");}};
+PAGES["vplugin/getstarted"]={section:"vplugin",type:"tutorial",standalone:true,title:{en:"Build your first plugin",ja:"最初のプラグインを作る"},lead:{en:"Run a plugin in the Playground with no local setup, then move to a local CLI workflow.",ja:"ローカル環境なしで Playground でプラグインを動かし、その後ローカル CLI 開発へ。"},est:{en:"20 min",ja:"20分"},prereq:"vplugin/overview",updated:{en:"July 3, 2026",ja:"2026年7月3日"},
+  toc:[{id:"g-play",l:{en:"Run in Playground",ja:"Playground"}},{id:"g-local",l:{en:"Local setup",ja:"ローカル環境"}}],
+  body:function(){return "<div class=\"note\"><span>ℹ️</span><div>"+L({en:"New to plugins? Skim the",ja:"プラグインが初めてなら"})+" <a href=\"#\" data-route=\"vplugin/overview\">"+L({en:"Overview",ja:"オーバービュー"})+"</a> "+L({en:"first.",ja:"を先に。"})+"</div></div><h2 id=\"g-play\">"+L({en:"Run in the Playground",ja:"Playground で動かす"})+"</h2><p>"+L({en:"Open the Playground, pick the Widget preset, and edit the manifest — the map reloads instantly.",ja:"Playground を開き Widget プリセットを選び manifest を編集すると即反映されます。"})+"</p><div class=\"codeblock\"><div class=\"cm\"># reearth.yml</div><div>id: my-first-widget</div><div>extensions:</div><div>&nbsp;&nbsp;- id: hello<br>&nbsp;&nbsp;&nbsp;&nbsp;type: widget</div></div><h2 id=\"g-local\">"+L({en:"Local setup (CLI)",ja:"ローカル環境（CLI）"})+"</h2><p>"+L({en:"When you outgrow the Playground, scaffold locally.",ja:"Playground を超えたらローカルへ。"})+"</p>";},next:"vplugin/guide-cmsdata",refs:["vplugin/reference"]};
+PAGES["vplugin/guide-cmsdata"]={section:"vplugin",tab:"guides",type:"howto",title:{en:"Fetch and display CMS data",ja:"CMS からデータを取得して表示する"},lead:{en:"Fetch items from Re:Earth CMS in a plugin and render them as map features.",ja:"プラグインから Re:Earth CMS のアイテムを取得し、地図フィーチャーとして描画します。"},updated:{en:"July 3, 2026",ja:"2026年7月3日"},
+  body:function(){return "<p>"+L({en:"Call the CMS Public API from your plugin, map items to GeoJSON, and hand them to <code>reearth.layers</code>.",ja:"プラグインから CMS Public API を呼び、アイテムを GeoJSON に変換して <code>reearth.layers</code> に渡します。"})+"</p><div class=\"codeblock\"><div><span class=\"k\">const</span> res = <span class=\"k\">await</span> fetch(cmsPublicApiUrl);</div><div>reearth.layers.add({ type:'geojson', data });</div></div>";},refs:["vplugin/reference","cms/c-delivery"]};
+PAGES["vplugin/reference"]={section:"vplugin",tab:"reference",type:"reference",title:{en:"Plugin API reference",ja:"プラグイン API リファレンス"},lead:{en:"The message API a plugin uses to talk to Visualizer. Each namespace is self-contained.",ja:"プラグインが Visualizer とやり取りするメッセージ API。各名前空間は自己完結です。"},updated:{en:"July 3, 2026",ja:"2026年7月3日"},isRefApi:true};
+PAGES["vplugin/support"]={section:"vplugin",tab:"support",title:{en:"Support & FAQ",ja:"サポート・FAQ"},lead:{en:"Common plugin questions.",ja:"プラグインのよくある質問。"},updated:{en:"July 3, 2026",ja:"2026年7月3日"},
+  body:function(){return "<p><b>"+L({en:"Q. My styles don't apply to large datasets.",ja:"Q. 大容量データにスタイルが当たりません。"})+"</b><br>"+L({en:"Large datasets fall back to Simple Style.",ja:"大容量データは Simple Style にフォールバックします。"})+"</p>";}};
+// ===== Developer: CMS Developer =====
+PAGES["cmsdev/overview"]={section:"cmsdev",tab:"overview",title:{en:"CMS Developer",ja:"CMS 開発者向け"},lead:{en:"Two APIs for Re:Earth CMS. Choose by whether you read public content or automate an integration.",ja:"Re:Earth CMS の2つの API。公開コンテンツを読むか、連携を自動化するかで選びます。"},updated:{en:"June 30, 2026",ja:"2026年6月30日"},
+  toc:[{id:"a-public",l:{en:"Public API",ja:"Public API"}},{id:"a-integration",l:{en:"Integration API",ja:"Integration API"}}],
+  body:function(){return "<h2 id=\"a-public\">"+L({en:"Public API",ja:"Public API"})+"</h2><p>"+L({en:"Read-only, key-less access to published content — for websites, maps and AI agents.",ja:"公開コンテンツへの読み取り専用・キー不要アクセス。Web・地図・AI エージェント向け。"})+"</p><h2 id=\"a-integration\">"+L({en:"Integration API",ja:"Integration API"})+"</h2><p>"+L({en:"Key-authenticated read/write with webhooks.",ja:"キー認証の読み書き＋Webhook。"})+"</p><p style=\"font-size:12.5px;color:var(--text-muted)\">"+L({en:"Reference and guides are being migrated in Phase 1.",ja:"リファレンス・ガイドは Phase 1 で移行中です。"})+"</p>"+overviewHub("cmsdev");}};
+[
+  {k:"vplugin/gs-playground",s:"vplugin",tab:"get-started",t:{en:"Run in the Playground (no local setup)",ja:"Playground で動かす（ローカル環境不要）"},d:{en:"Run a plugin with no local setup.",ja:"ローカル環境なしでプラグインを動かす。"}},
+  {k:"vplugin/gs-local",s:"vplugin",tab:"get-started",t:{en:"Local development setup (CLI; after CLI is ready)",ja:"ローカル開発環境のセットアップ（CLI 使用版、CLI整備後）"},d:{en:"Set up a local workflow with the CLI.",ja:"CLI でローカル開発環境を用意する。"}},
+  {k:"vplugin/g-messaging",s:"vplugin",tab:"guides",type:"howto",t:{en:"Messaging between a plugin and the Re:Earth UI",ja:"プラグインとRe:Earth UI間の通信"},d:{en:"Send and receive messages with the host UI.",ja:"ホスト UI とメッセージを送受信する。"}},
+  {k:"vplugin/g-properties",s:"vplugin",tab:"guides",type:"howto",t:{en:"Let users set configurable properties (inspector)",ja:"ユーザーが設定可能なプロパティを設定する（inspector）"},d:{en:"Configure a plugin from the inspector.",ja:"inspector からプラグインを設定する。"}},
+  {k:"vplugin/g-external",s:"vplugin",tab:"guides",type:"howto",t:{en:"External API integration",ja:"外部API連携"},d:{en:"Call an external service from a plugin.",ja:"プラグインから外部サービスを呼び出す。"}},
+  {k:"vplugin/g-large-data",s:"vplugin",tab:"guides",type:"howto",t:{en:"Optimizing and displaying large datasets (styles stop applying; Simple style only)",ja:"大容量データの最適化と表示（スタイルが当たらなくなる、Simple styleのみ）"},d:{en:"Handle large data with Simple Style fallback.",ja:"大容量データを Simple Style で扱う。"}},
+  {k:"vplugin/ex-org",s:"vplugin",tab:"examples",t:{en:"Organize and list existing reearth-plugins org assets",ja:"reearth-plugins org の既存資産を整理・掲載"},d:{en:"Curated existing plugins from the org.",ja:"org の既存プラグインを整理・掲載。"}},
+  {k:"vplugin/ex-presets",s:"vplugin",tab:"examples",t:{en:"List the Playground presets too",ja:"Playground プリセット一覧も掲載"},d:{en:"Ready-made Playground presets.",ja:"Playground のプリセット一覧。"}},
+  {k:"vplugin/tools-cli",s:"vplugin",tab:"tools",t:{en:"CLI, skills, etc. (after they are ready)",ja:"CLI・skills 等（整備後）"},d:{en:"CLI and authoring tools.",ja:"CLI や作成ツール。"}},
+  {k:"cmsdev/gs-public",s:"cmsdev",tab:"get-started",t:{en:"Using the CMS Public API (link after launch)",ja:"CMS Public APIの使い方（公開後、URLをクリック）"},d:{en:"Read published content with the Public API.",ja:"Public API で公開コンテンツを読む。"}},
+  {k:"cmsdev/gs-key",s:"cmsdev",tab:"get-started",t:{en:"Issue an Integration API key & make the first call",ja:"Integration APIキー発行・最初の API 呼び出し"},d:{en:"Create a key and make your first call.",ja:"キーを発行し最初の呼び出しをする。"}},
+  {k:"cmsdev/gs-webhook",s:"cmsdev",tab:"get-started",t:{en:"Using the Integration API webhooks",ja:"Integration API Webhookの使い方"},d:{en:"Receive events via webhooks.",ja:"Webhook でイベントを受け取る。"}},
+  {k:"cmsdev/g-public-get",s:"cmsdev",tab:"guides",type:"howto",t:{en:"Fetch data with the Public API",ja:"Public API でデータを取得する"},d:{en:"Query published items.",ja:"公開アイテムを取得する。"}},
+  {k:"cmsdev/g-int-get",s:"cmsdev",tab:"guides",type:"howto",t:{en:"Fetch data with the Integration API",ja:"Integration APIでデータを取得する"},d:{en:"Read items via the Integration API.",ja:"Integration API でアイテムを取得する。"}},
+  {k:"cmsdev/g-int-add",s:"cmsdev",tab:"guides",type:"howto",t:{en:"Add data with the Integration API",ja:"Integration APIでデータを追加する"},d:{en:"Create items via the Integration API.",ja:"Integration API でアイテムを追加する。"}},
+  {k:"cmsdev/g-int-del",s:"cmsdev",tab:"guides",type:"howto",t:{en:"Update & delete data with the Integration API",ja:"Integration APIでデータを更新・削除する"},d:{en:"Update and delete items.",ja:"アイテムを更新・削除する。"}},
+  {k:"cmsdev/g-asset-get",s:"cmsdev",tab:"guides",type:"howto",t:{en:"Fetch assets with the Integration API",ja:"Integration APIでアセットを取得する"},d:{en:"Retrieve assets.",ja:"アセットを取得する。"}},
+  {k:"cmsdev/g-asset-del",s:"cmsdev",tab:"guides",type:"howto",t:{en:"Update & delete assets with the Integration API",ja:"Integration APIでアセットを更新・削除する"},d:{en:"Update and delete assets.",ja:"アセットを更新・削除する。"}},
+  {k:"cmsdev/g-webhook",s:"cmsdev",tab:"guides",type:"howto",t:{en:"Update data on webhook events",ja:"Webhook でデータを更新する"},d:{en:"Trigger updates from webhooks.",ja:"Webhook で更新を走らせる。"}},
+  {k:"cmsdev/ex-osgeo",s:"cmsdev",tab:"examples",t:{en:"Show CMS data on a map (OSGeo Map example)",ja:"CMS データを地図に表示する（OSGeo Mapの例）"},d:{en:"Example: CMS content on a map.",ja:"CMS を地図に表示する例。"}},
+  {k:"cmsdev/ex-kumagaya",s:"cmsdev",tab:"examples",t:{en:"Register data from a plugin into CMS (Kumagaya Plugin example)",ja:"プラグインからCMSへデータを登録する（Kumagaya Pluginとかの例）"},d:{en:"Example: a plugin writing into CMS.",ja:"プラグインが CMS に書き込む例。"}},
+  {k:"cmsdev/ref-integration",s:"cmsdev",tab:"reference",type:"reference",fromOpenApi:true,t:{en:"Integration API Reference",ja:"Integration API Reference"},d:{en:"REST reference from the OpenAPI spec.",ja:"OpenAPI 仕様からの REST リファレンス。"}},
+  {k:"cmsdev/ref-public",s:"cmsdev",tab:"reference",type:"reference",fromOpenApi:true,t:{en:"Public API Reference",ja:"Public API Reference"},d:{en:"Read-only delivery API reference.",ja:"読み取り専用の配信 API リファレンス。"}},
+  {k:"cmsdev/tools-sdk",s:"cmsdev",tab:"tools",t:{en:"SDK / CLI (after they are ready)",ja:"SDK / CLI（整備後）"},d:{en:"SDK and CLI.",ja:"SDK・CLI。"}},
+  {k:"cmsdev/support",s:"cmsdev",tab:"support",t:{en:"FAQ",ja:"FAQ"},d:{en:"Common CMS API questions.",ja:"CMS API のよくある質問。"}}
+].forEach(function(e){PAGES[e.k]={section:e.s,tab:e.tab,type:e.type||null,title:e.t,lead:e.d,fromOpenApi:e.fromOpenApi||false,updated:{en:"July 3, 2026",ja:"2026年7月3日"}};});
+var REF_GRP={modeling:["cms/r-fields","cms/r-attributes","cms/r-models","cms/r-groups","cms/r-schema"],content:["cms/r-items","cms/r-itemviews","cms/r-filters","cms/r-assets"],publish:["cms/r-projects","cms/r-workspaces","cms/r-wssettings"],ops:["cms/r-requests","cms/r-comments","cms/r-webhooks","cms/r-integrations","cms/r-import"]};
+Object.keys(REF_GRP).forEach(function(g){REF_GRP[g].forEach(function(k){if(PAGES[k])PAGES[k].grp=g;});});
+var LIBRARY=[{route:"cms/tutorial-getstarted",product:"cms",audience:"user"},{route:"visualizer/tutorial-firstmap",product:"visualizer",audience:"user"},{route:"vplugin/getstarted",product:"developer",audience:"developer"}];
+// Community destinations. URLs are placeholders — the real channels are an org decision (which platform is the official venue).
+var COMMUNITY=[
+  {id:"discord",nm:"Discord",role:{en:"Realtime help & discussion",ja:"リアルタイムの質問・雑談"},url:"#"},
+  {id:"github",nm:"GitHub Discussions",role:{en:"Feature requests & technical Q&A",ja:"要望・技術的な議論"},url:"#"},
+  {id:"x",nm:"X (Twitter)",role:{en:"Announcements & showcase",ja:"お知らせ・作例の紹介"},url:"#"}
+];
+var FIELDS=[
+  {n:"Text",t:"string",d:{en:"Single-line plain text.",ja:"単一行のプレーンテキスト。"},u:{en:"Names, short labels",ja:"名前・短いラベル"}},
+  {n:"Markdown",t:"string",d:{en:"Rich text in Markdown.",ja:"Markdownのリッチテキスト。"},u:{en:"Article bodies, briefings",ja:"記事本文・ブリーフィング"}},
+  {n:"Integer",t:"number",d:{en:"Whole numbers with optional range checks.",ja:"任意で範囲検証できる整数。"},u:{en:"Capacity, population",ja:"収容人数・人口"}},
+  {n:"Select",t:"enum",d:{en:"One choice from a defined set.",ja:"定義済み選択肢から1つ。"},u:{en:"Status, hazard category",ja:"ステータス・災害種別"}},
+  {n:"Date",t:"datetime",d:{en:"Calendar date, optionally with time.",ja:"任意で時刻を含む日付。"},u:{en:"Published-at, event dates",ja:"公開日・イベント日"}},
+  {n:"Asset",t:"ref",d:{en:"Reference to a file in the asset library.",ja:"アセットライブラリのファイル参照。"},u:{en:"Images, GeoJSON, PDFs",ja:"画像・GeoJSON・PDF"}},
+  {n:"Geometry (Editor)",t:"geojson",d:{en:"Draw points, lines and polygons on a map.",ja:"地図上で点・線・面を描画。"},u:{en:"Evacuation sites, routes",ja:"避難所・経路"}}
+];
+var APIREF=[
+  {n:"reearth.viewer",d:{en:"Camera, scene and viewer state.",ja:"カメラ・シーン・ビューア状態。"}},
+  {n:"reearth.layers",d:{en:"Add, update and remove map layers.",ja:"地図レイヤーの追加・更新・削除。"}},
+  {n:"reearth.extension / ui",d:{en:"Render the plugin's own UI, modals and popups.",ja:"プラグイン独自の UI・モーダル・ポップアップの描画。"}},
+  {n:"reearth.data / timeline",d:{en:"Access bound data sources and control the timeline.",ja:"バインドされたデータソースとタイムライン制御。"}},
+  {n:"Events",d:{en:"Subscribe to select, camera-move and tick events.",ja:"選択・カメラ移動・tick イベントの購読。"}}
+];
+function esc(s){return String(s).replace(/[&<>\"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+function tabTitle(tab){return L(TABTITLE[tab])||tab;}
+function sectionPages(secId){return Object.keys(PAGES).filter(function(k){return PAGES[k].section===secId&&!PAGES[k].standalone;});}
+function tabRouteFor(secId,tab){var ks=sectionPages(secId).filter(function(k){return PAGES[k].tab===tab;});return ks[0]||null;}
+function accentFor(secId){var s=sec(secId);return (s&&s.accent)||"cms";}
+function go(route){if(!route)return;S.route=route;var p=PAGES[route];if(p&&p.section&&!(p.standalone&&p.type==="tutorial")){S.product=p.section;}closeSearch();render();window.scrollTo(0,0);}
+function render(){
+  document.documentElement.setAttribute("data-theme",S.dark?"dark":"light");
+  document.documentElement.setAttribute("data-product",accentFor(S.product));
+  document.documentElement.setAttribute("lang",S.lang);
+  var main;
+  if(S.route==="home")main=home();
+  else if(S.route==="tutorials")main=library();
+  else if(S.route==="developer")main=developerLanding();
+  else main=docShell();
+  document.getElementById("app").innerHTML=topbar()+main+siteFooter();
+  wire();renderSearch();
+}
+function siteFooter(){return '<footer class="site-footer"><div class="ft-inner"><span class="ft-note">'+L(T.footNote)+'</span><span class="ft-links"><span class="ft-ai">'+svg("ai")+L(T.aiReady)+'</span><a href="/llms.txt" target="_blank" rel="noopener">llms.txt</a><a href="/llms-full.txt" target="_blank" rel="noopener">llms-full.txt</a></span></div></footer>';}
+function topbar(){
+  var isTut=(S.route==="tutorials")||(PAGES[S.route]&&PAGES[S.route].standalone&&PAGES[S.route].type==="tutorial");
+  var isDev=(!isTut)&&((S.route==="developer")||(PAGES[S.route]&&sec(S.product)&&sec(S.product).kind==="dev"));
+  var sw=PRODUCT_LIST.map(function(id){var cur=(S.product===id&&S.route!=="home"&&!isTut&&!isDev);return '<button data-product-sw="'+id+'" '+(cur?'aria-current="true"':'')+'>'+secName(id).replace("Re:Earth ","")+'</button>';}).join("");
+  return '<header class="topbar"><button class="logo" data-route="home"><span class="dot"></span>Re:Earth <span style="color:var(--text-muted);font-weight:500">'+L(T.docs)+'</span></button>'
+    +'<nav class="switcher" aria-label="Sections">'+sw+'<button data-route="developer" '+(isDev?'aria-current="true"':'')+'>'+L(T.devTab)+'</button><button data-route="tutorials" '+(isTut?'aria-current="true"':'')+'>'+L(T.tutorials)+'</button></nav>'
+    +'<div class="spacer"></div><button class="searchbtn" id="openSearch">'+svg("search")+'<span>'+L(T.search)+'</span><kbd>⌘K</kbd></button>'
+    +'<div class="seg" role="group" aria-label="Language"><button data-lang="en" '+(S.lang==="en"?'aria-pressed="true"':'')+'>EN</button><button data-lang="ja" '+(S.lang==="ja"?'aria-pressed="true"':'')+'>日本語</button></div>'
+    +'<button class="iconbtn" id="toggleTheme" aria-label="Toggle theme">'+(S.dark?"☀":"☾")+'</button></header>';
+}
+function typePill(k){return '<span class="pill" style="background:'+diaSoft(k)+';color:'+diaColor(k)+'">'+iconFor(k)+L(DIA[k].label)+'</span>';}
+function metaTags(p){return p.est?'<div class="tags"><span class="tag">⏱ '+L(p.est)+'</span></div>':'';}
+function docShell(){var p=PAGES[S.route];if(!p)return placeholder();
+  if(p.standalone)return '<div class="main" id="main">'+article(p)+'</div>';
+  return subbar()+'<div class="shell"><aside class="sidebar" aria-label="'+esc(secName(S.product))+'">'+sidebar()+'</aside><div class="main" id="main">'+article(p)+'</div></div>';}
+function subbar(){var cfg=sec(S.product);if(!cfg)return "";var tabs=cfg.tabs||[];var p=PAGES[S.route];
+  var ctx=cfg.kind==="dev"?'<a href="#" class="ctx" data-route="'+tabRouteFor(S.product,"overview")+'">'+esc(secName(S.product))+'</a><span class="ctx-sep">/</span>':'';
+  return '<nav class="subbar" aria-label="'+esc(secName(S.product))+' sections">'+ctx+tabs.map(function(tab){var route=tabRouteFor(S.product,tab);var cur=(p&&p.tab===tab);return '<button data-route="'+(route||"")+'" '+(cur?'aria-current="true"':'')+(route?'':' disabled style="opacity:.4"')+'>'+tabTitle(tab)+'</button>';}).join("")+'</nav>';}
+function sideLink(k){var pg=PAGES[k];return '<a href="#" data-route="'+k+'" '+(S.route===k?'aria-current="true"':'')+'>'+L(pg.title)+'</a>';}
+function sidebar(){var cfg=sec(S.product);if(!cfg)return "";var p=PAGES[S.route];
+  var curTab=(p&&p.tab)?p.tab:"overview";
+  var ks=sectionPages(S.product).filter(function(k){return PAGES[k].tab===curTab;});
+  if(!ks.length){var ov=tabRouteFor(S.product,curTab);if(ov)ks=[ov];}
+  if(!ks.length)return "";
+  var order=[],byGrp={},flat=[];
+  ks.forEach(function(k){var g=PAGES[k].grp;if(g){if(!byGrp[g]){byGrp[g]=[];order.push(g);}byGrp[g].push(k);}else flat.push(k);});
+  var html='<div class="grp"><div class="sb-tab">'+tabTitle(curTab)+'</div>';
+  flat.forEach(function(k){html+=sideLink(k);});
+  html+='</div>';
+  order.forEach(function(g){var gkey=S.product+"/"+curTab+"/"+g;var open=(!S.collapsed[gkey])||byGrp[g].indexOf(S.route)>=0;
+    html+='<div class="grp"><button class="grp-h" data-grp="'+gkey+'" aria-expanded="'+open+'"><span class="chev">'+(open?"▾":"▸")+'</span>'+L(GRPLABEL[g]||{en:g,ja:g})+'</button>';
+    if(open)byGrp[g].forEach(function(k){html+=sideLink(k);});
+    html+='</div>';});
+  return html;}
+function article(p){
+  if(p.stub)return '<div class="content-wrap no-toc"><article>'+crumbs(p)+'<h1 class="title">'+L(p.title)+'</h1><div class="stub">'+L(T.stubBody)+'</div>'+(p.refs&&p.refs.length?seeAlso(p.refs):'')+relatedTutorials(p)+docmeta(p)+'</article></div>';
+  var hasToc=p.toc&&p.toc.length;
+  var body=p.isRefCms?refCmsBody():p.isRefApi?refApiBody():(p.body?p.body():"");
+  var out='<div class="content-wrap'+(hasToc?'':' no-toc')+'"><article>'+crumbs(p);
+  out+='<h1 class="title">'+L(p.title)+'</h1>'+metaTags(p);
+  if(p.lead)out+='<p class="lead">'+L(p.lead)+'</p>';
+  if(p.stale)out+='<div class="stale"><span>⚠️</span><div>'+L(T.staleBody)+'</div></div>';
+  if(p.fromOpenApi)out+='<div class="note"><span>⚙️</span><div>'+L(T.openapiNote)+'</div></div>';
+  out+=addHeadingAnchors(body);
+  if(p.type==="tutorial"){if(p.refs&&p.refs.length)out+=seeAlso(p.refs);out+=tryNext(p);}
+  else{out+=pager(p,S.route);if(p.refs&&p.refs.length)out+=seeAlso(p.refs);if(p.tab!=="whats-new"&&p.tab!=="overview")out+=relatedTutorials(p);}
+  out+=docmeta(p)+'</article>';
+  if(hasToc)out+='<nav class="toc" aria-label="'+L(T.onThisPage)+'"><div class="lbl">'+L(T.onThisPage)+'</div>'+p.toc.map(function(t){return '<a href="#'+t.id+'" data-toc="'+t.id+'">'+L(t.l)+'</a>';}).join("")+'</nav>';
+  out+='</div>';return out;}
+function addHeadingAnchors(htmlStr){return htmlStr.replace(/<h([23]) id="([^"]+)">([\s\S]*?)<\/h\1>/g,function(m,lv,id,inner){return '<h'+lv+' id="'+id+'">'+inner+'<a class="hanchor" href="#'+id+'" data-anchor="'+id+'" aria-label="'+L(T.anchorLabel)+'">#</a></h'+lv+'>';});}
+function updateLog(rows){return rows.map(function(r){var pg=PAGES[r.route];var title=pg?L(pg.title):"";return '<div class="upd"><div class="upd-date">'+L(r.date)+'</div><div class="upd-body"><a href="#" data-route="'+r.route+'">'+esc(title)+'</a><div class="upd-sum">'+L(r.sum)+'</div></div></div>';}).join("");}
+function nextLink(lab,pg,route){return '<a class="pagecard next" href="#" data-route="'+route+'"><span class="body"><span class="lab">'+L(lab)+'</span><span class="tt">'+L(pg.title)+'</span></span><span class="arr">→</span></a>';}
+function prevLink(pg,route){return '<a class="pagecard prev" href="#" data-route="'+route+'"><span class="arr">←</span><span class="body"><span class="lab">'+L(T.prev)+'</span><span class="tt">'+L(pg.title)+'</span></span></a>';}
+function prevOf(route){for(var k in PAGES){if(PAGES[k].next===route)return k;}return null;}
+function pager(p,route){var prevR=prevOf(route);var prevPg=prevR?PAGES[prevR]:null;var nextPg=(p.next&&PAGES[p.next])?PAGES[p.next]:null;
+  if(!prevPg&&!nextPg)return "";
+  return '<div class="pager">'+(prevPg?prevLink(prevPg,prevR):'<span></span>')+(nextPg?nextLink(p.nextLabel||T.next,nextPg,p.next):'<span></span>')+'</div>';}
+function firstTutorialFor(secId){var m=LIBRARY.filter(function(it){var pg=PAGES[it.route];return pg&&pg.section===secId;});return m.length?m[0].route:null;}
+function pathCard(card,route){if(!route)return "";return '<a class="prodcard" href="#" data-route="'+route+'"><div class="nm">'+L(card.t)+'</div><div class="pd">'+L(card.d)+'</div><span class="go">'+L(card.cta)+' →</span></a>';}
+function tutFilterFor(secId){var cfg=sec(secId);return (cfg&&cfg.kind==="dev")?"developer":secId;}
+function pathCardTutorials(card,filterVal){return '<a class="prodcard" href="#" data-route="tutorials" data-tutfilter="'+filterVal+'"><div class="nm">'+L(card.t)+'</div><div class="pd">'+L(card.d)+'</div><span class="go">'+L(card.cta)+' →</span></a>';}
+function overviewHub(secId){var cfg=sec(secId);if(!cfg)return "";var tabs=cfg.tabs||[];var cards=[];
+  var tutRoute=firstTutorialFor(secId);
+  if(tutRoute)cards.push(pathCardTutorials(HUB.tutorial,tutFilterFor(secId)));
+  else if(tabs.indexOf("get-started")>=0)cards.push(pathCard(HUB.getstarted,tabRouteFor(secId,"get-started")));
+  if(tabs.indexOf("concepts")>=0)cards.push(pathCard(HUB.concepts,tabRouteFor(secId,"concepts")));
+  var howtoTab=tabs.indexOf("how-to")>=0?"how-to":(tabs.indexOf("guides")>=0?"guides":null);
+  if(howtoTab)cards.push(pathCard(HUB.howto,tabRouteFor(secId,howtoTab)));
+  if(tabs.indexOf("examples")>=0)cards.push(pathCard(HUB.examples,tabRouteFor(secId,"examples")));
+  if(tabs.indexOf("reference")>=0)cards.push(pathCard(HUB.reference,tabRouteFor(secId,"reference")));
+  cards=cards.filter(Boolean);
+  if(!cards.length)return "";
+  return '<div class="sect" style="margin-top:28px"><div class="sect-h">'+L(HUB.heading)+'</div><div class="sect-s">'+L(HUB.sub)+'</div><div class="prodgrid">'+cards.join("")+'</div></div>';}
+function seeAlso(routes){
+  var byType={};routes.filter(function(r){return PAGES[r];}).forEach(function(r){var t=PAGES[r].type||"other";(byType[t]=byType[t]||[]).push(r);});
+  var order=["concepts","howto","reference","other"];
+  var groups=order.filter(function(t){return byType[t];}).map(function(t){
+    var label=t==="other"?L({en:"Related",ja:"関連"}):L(DIA[t].label);
+    var links=byType[t].map(function(r){return '<a href="#" data-route="'+r+'">'+esc(L(PAGES[r].title))+'</a>';}).join("");
+    return '<div class="sa-group"><div class="sa-type">'+label+'</div>'+links+'</div>';}).join("");
+  return groups?'<div class="seealso"><div class="lbl">'+L(T.seeAlso)+'</div>'+groups+'</div>':'';}
+function relatedTutorials(p){
+  var secId=p.section;if(!secId)return "";
+  var tuts=LIBRARY.filter(function(it){var pg=PAGES[it.route];return pg&&pg.section===secId&&it.route!==S.route&&it.route!==p.next;});
+  if(!tuts.length)return "";
+  var links=tuts.map(function(it){return '<a href="#" data-route="'+it.route+'">'+esc(L(PAGES[it.route].title))+'</a>';}).join("");
+  return '<div class="seealso"><div class="lbl">'+L(T.relTut)+'</div>'+links+'</div>';}
+function tryNext(p){
+  var others=LIBRARY.filter(function(it){return it.route!==S.route;});
+  var links=others.map(function(it){return '<a href="#" data-route="'+it.route+'">'+esc(L(PAGES[it.route].title))+'</a>';}).join("");
+  links+='<a href="#" data-route="tutorials">'+L(T.browseTut)+'</a>';
+  return '<div class="seealso"><div class="lbl">'+L(T.tryNext)+'</div><p style="font-size:13px;color:var(--text-muted);margin:0 0 10px">'+L({en:"Now that you can do this, try building something else:",ja:"ここまでできたら、次はこれを作ってみましょう："})+'</p>'+links+'</div>';}
+function refCmsBody(){return '<p>'+L({en:"Wondering why fields have types? See ",ja:"なぜ型があるのか？ "})+'<a href="#" data-route="cms/c-schema">'+L({en:"Decide your model structure first",ja:"モデルの構造を先に決める"})+'</a></p>'+FIELDS.map(function(f,i){var id="f-"+f.n.toLowerCase().replace(/[^a-z]+/g,"-");return '<section class="refitem" id="'+id+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3>'+esc(f.n)+'</h3><code>'+esc(f.t)+'</code></div><p style="margin:0 0 6px;color:var(--text-soft);font-size:14px">'+L(f.d)+'</p><div style="font-size:12.5px;color:var(--text-muted)"><b style="color:var(--text-soft)">'+L({en:"Use for",ja:"用途"})+':</b> '+L(f.u)+'</div></section>';}).join("");}
+function refApiBody(){return '<p>'+L({en:"Each namespace below is self-contained — copy its anchor to cite it directly.",ja:"以下の各名前空間は自己完結です。アンカーで直接引用できます。"})+'</p>'+APIREF.map(function(a,i){var id="api-"+a.n.replace(/[^a-zA-Z]+/g,"-").toLowerCase();return '<section class="refitem" id="'+id+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3 style="font-family:var(--font-mono);font-size:14px">'+esc(a.n)+'</h3></div><p style="margin:0;color:var(--text-soft);font-size:14px">'+L(a.d)+'</p></section>';}).join("");}
+function crumbs(p){var parts=[{l:L(T.docs),r:"home"}];
+  if(p.standalone){parts.push({l:L(T.tutorials),r:"tutorials"});}
+  else{var cfg=sec(p.section);if(cfg&&cfg.kind==="dev"){parts.push({l:L(T.devTab),r:"developer"});parts.push({l:secName(p.section),r:tabRouteFor(p.section,"overview")});}else if(cfg){parts.push({l:secName(p.section).replace("Re:Earth ",""),r:tabRouteFor(p.section,"overview")});}if(p.type)parts.push({l:L(DIA[p.type].label),r:null});}
+  parts.push({l:L(p.title),r:null});
+  return '<nav class="crumbs" aria-label="Breadcrumb">'+parts.map(function(c,i){var sep=i<parts.length-1?'<span class="sep">/</span>':'';return (c.r?'<a href="#" data-route="'+c.r+'">'+esc(c.l)+'</a>':'<span>'+esc(c.l)+'</span>')+sep;}).join("")+'</nav>';}
+function docmeta(p){var fb=S.fb[S.route];
+  return '<div class="docmeta"><span>'+svg("clock")+' '+L(T.updated)+' '+L(p.updated||{en:"—",ja:"—"})+'</span></div>'
+    +'<div class="fb"><div class="q">'+L(T.helpful)+'</div><div class="btns"><button data-fb="up" '+(fb==="up"?'aria-pressed="true"':'')+'>👍 '+L(T.yes)+'</button><button data-fb="down" '+(fb==="down"?'aria-pressed="true"':'')+'>👎 '+L(T.no)+'</button><button id="reportBtn" style="margin-left:auto">'+L(T.report)+'</button></div>'+(fb?'<div class="thanks">'+L(T.thanks)+'</div>':'')+'</div>';}
+function home(){var prods=PRODUCT_LIST.map(function(id){var s=sec(id);var live=s.live;var route=live?tabRouteFor(id,"overview"):null;
+    return (live?'<a class="prodcard" href="#" data-route="'+route+'">':'<div class="prodcard soon">')+'<div class="nm"><span class="sw" style="background:'+s.sw+'"></span>'+L(s.name)+(live?'':'<span class="soonbadge">'+L(T.comingSoon)+'</span>')+'</div><div class="pd">'+L(s.desc)+'</div>'+(live?'<span class="go">'+L(TABTITLE.overview)+' →</span></a>':'</div>');}).join("");
+  return '<main class="home" id="main"><div class="hero"><h1>'+L({en:"How can we help?",ja:"お手伝いできることはありますか？"})+'</h1><p>'+L({en:"Documentation, guides and references for the Re:Earth platform.",ja:"Re:Earthプラットフォームのドキュメント・ガイド・リファレンス。"})+'</p></div>'
+    +'<div class="sect"><div class="sect-h">'+L(T.products)+'</div><div class="sect-s">'+L(T.productsSub)+'</div><div class="prodgrid">'+prods+'</div></div>'
+    +'<div class="sect"><div class="sect-h">'+L(T.dev)+'</div><div class="sect-s">'+L(T.devSub)+'</div><div class="tutbanner" style="border-color:var(--border);background:var(--bg-subtle)"><div style="flex:1"><div style="font-weight:600;font-size:14px;margin-bottom:2px">'+L({en:"3 developer sites",ja:"3つの開発者向けサイト"})+'</div><div style="font-size:12.5px;color:var(--text-soft)">Visualizer Plugin · CMS Developer · Flow Developer</div></div><button class="cta" data-route="developer">'+L(T.devTab)+' →</button></div></div>'
+    +'<div class="sect"><div class="tutbanner"><div style="flex:1"><div style="font-weight:600;font-size:15px;margin-bottom:3px">'+L(T.tutorials)+'</div><div style="font-size:13px;color:var(--text-soft)">'+L(T.tutSub)+'</div></div><button class="cta" data-route="tutorials">'+L(T.browseTut)+' →</button></div></div>'
+    +'<div class="sect"><div class="sect-h">'+L(T.community)+'</div><div class="sect-s">'+L(T.communitySub)+'</div><div class="commgrid">'+community()+'</div></div></main>';}
+function community(){return COMMUNITY.map(function(c){return '<a class="commcard" href="'+c.url+'" target="_blank" rel="noopener"><span class="ci">'+svg("ext")+'</span><span class="cbody"><span class="cn">'+esc(c.nm)+'</span><span class="cr">'+L(c.role)+'</span></span><span class="carr">↗</span></a>';}).join("");}
+function developerLanding(){var cards=DEV_LIST.map(function(id){var s=sec(id);var live=s.live;var route=live?tabRouteFor(id,"overview"):null;
+    var struct='<div class="structure">'+(s.structure||[]).map(function(x){return '<span>'+esc(x)+'</span>';}).join("")+'</div>';
+    return (live?'<a class="prodcard" href="#" data-route="'+route+'">':'<div class="prodcard soon">')+'<div class="nm">'+L(s.name)+(live?'':'<span class="soonbadge">'+L(T.comingSoon)+'</span>')+'</div><div class="pd">'+L(s.desc)+'</div>'+struct+(live?'<span class="go" style="display:block;margin-top:10px">'+L(TABTITLE.overview)+' →</span></a>':'</div>');}).join("");
+  return '<main class="home" id="main"><div class="hero" style="margin-bottom:24px"><h1>'+L(T.dev)+'</h1><p>'+L(T.devSub)+'</p></div><div class="sect"><div class="prodgrid">'+cards+'</div></div><p style="max-width:760px;margin:6px auto 0;font-size:12.5px;color:var(--text-muted);text-align:center">'+L({en:"Contributor docs live in each GitHub repository, not here.",ja:"コントリビューター向けは各 GitHub リポジトリにあり、ここには置きません。"})+'</p></main>';}
+function library(){var fp=S.tut.product,fa=S.tut.audience;
+  var filtered=LIBRARY.filter(function(it){return (fp.length===0||fp.indexOf(it.product)>=0)&&(fa.length===0||fa.indexOf(it.audience)>=0);});
+  var prodChips=["cms","visualizer","developer"].map(function(id){var on=fp.indexOf(id)>=0;var nm=id==="developer"?L(T.developer):secName(id).replace("Re:Earth ","");return '<button class="chip" data-fprod="'+id+'" '+(on?'aria-pressed="true"':'')+'>'+nm+'</button>';}).join("");
+  var audChips=[["user",T.user],["developer",T.developer]].map(function(a){var on=fa.indexOf(a[0])>=0;return '<button class="chip" data-faud="'+a[0]+'" '+(on?'aria-pressed="true"':'')+'>'+L(a[1])+'</button>';}).join("");
+  var cards=filtered.length?filtered.map(function(it){var pg=PAGES[it.route];var prodName=it.product==="developer"?L(T.developer):secName(it.product).replace("Re:Earth ","");
+    return '<a class="tutcard" href="#" data-route="'+it.route+'"><div class="meta"><span class="badge" style="background:'+diaSoft("tutorial")+';color:'+diaColor("tutorial")+'">'+prodName+'</span><span class="badge" style="background:var(--bg-subtle);color:var(--text-soft)">'+(it.audience==="developer"?L(T.developer):L(T.user))+'</span>'+(pg.est?'<span class="badge" style="background:var(--bg-subtle);color:var(--text-muted)">⏱ '+L(pg.est)+'</span>':'')+'</div><div class="ct">'+L(pg.title)+'</div><div class="cd">'+L(pg.lead)+'</div></a>';}).join(""):'<div class="empty">'+L(T.noTut)+'</div>';
+  return '<main class="lib" id="main"><h1>'+L(T.tutorials)+'</h1><p class="sub">'+L(T.tutSub)+'</p><div class="filters"><div class="fgroup"><div class="fh">'+L(T.filterProduct)+'</div><div class="chips">'+prodChips+'</div></div><div class="fgroup"><div class="fh">'+L(T.filterAudience)+'</div><div class="chips">'+audChips+'</div></div></div><div class="tutlist">'+cards+'</div></main>';}
+function placeholder(){var nm=secName(S.product)||"Re:Earth";return '<div class="placeholder" id="main"><h1>'+esc(nm)+' '+L(T.docs)+'</h1><p>'+L({en:"This section is a placeholder in the prototype. CMS, Visualizer and the Visualizer Plugin site are built out — use the switcher.",ja:"このセクションはプロトタイプ上のプレースホルダーです。CMS・Visualizer・Visualizer Plugin は作り込み済みです。スイッチャーからご覧ください。"})+'</p></div>';}
+function svg(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';if(k==="search")return '<svg width="15" height="15" viewBox="0 0 24 24"><circle '+s+' cx="11" cy="11" r="7"/><path '+s+' d="M21 21l-4-4"/></svg>';if(k==="clock")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px"><circle '+s+' cx="12" cy="12" r="9"/><path '+s+' d="M12 7v5l3 2"/></svg>';if(k==="ext")return '<svg width="16" height="16" viewBox="0 0 24 24"><path '+s+' d="M17 3a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4z"/><path '+s+' d="M8.5 12.5h7M12 9v7"/></svg>';if(k==="ai")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:5px"><path '+s+' d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>';return "";}
+function iconFor(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';var d={tutorial:'<path '+s+' d="M12 4l10 5-10 5L2 9z"/><path '+s+' d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/>',howto:'<path '+s+' d="M14.7 6.3a4 4 0 00-5.4 5.2L3 18v3h3l6.5-6.5a4 4 0 005.2-5.4l-2.6 2.6-2.1-.5-.5-2.1z"/>',reference:'<path '+s+' d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/>',concepts:'<path '+s+' d="M9 18h6M10 21h4M12 3a6 6 0 013.5 10.9c-.5.4-.5 1-.5 1.6H9c0-.6 0-1.2-.5-1.6A6 6 0 0112 3z"/>'}[k];return '<svg width="15" height="15" viewBox="0 0 24 24" style="margin-right:1px">'+d+'</svg>';}
+function searchProd(p){var scn=sec(p.section);if(!p.section)return "";return (scn&&scn.kind==="dev")?"developer":p.section;}
+function searchDocs(){return Object.keys(PAGES).map(function(k){var p=PAGES[k];var scn=sec(p.section);return {route:k,title:L(p.title),crumb:(scn?L(scn.name).replace("Re:Earth ",""):"")+" · "+(p.type?L(DIA[p.type].label):(p.tab?tabTitle(p.tab):"")),type:p.type||"",product:searchProd(p)};});}
+function searchFacetOpts(all){var prod=[],typ=[];all.forEach(function(d){if(d.product&&prod.indexOf(d.product)<0)prod.push(d.product);if(d.type&&typ.indexOf(d.type)<0)typ.push(d.type);});
+  var prodOrder=["cms","visualizer","flow","dashboard","developer"];var typOrder=["tutorial","concepts","howto","reference"];
+  prod.sort(function(a,b){return prodOrder.indexOf(a)-prodOrder.indexOf(b);});typ.sort(function(a,b){return typOrder.indexOf(a)-typOrder.indexOf(b);});
+  return {prod:prod,typ:typ};}
+function prodFacetLabel(id){return id==="developer"?L(T.developer):secName(id).replace("Re:Earth ","");}
+function renderSearch(){var inp=document.getElementById("searchInput");var q=(inp?inp.value:"").trim().toLowerCase();
+  var all=searchDocs();var opts=searchFacetOpts(all);
+  var res=all.filter(function(d){var mq=!q||(d.title+" "+d.crumb).toLowerCase().indexOf(q)>=0;var mp=S.sf.product.length===0||S.sf.product.indexOf(d.product)>=0;var mt=S.sf.type.length===0||S.sf.type.indexOf(d.type)>=0;return mq&&mp&&mt;});
+  var fbox=document.getElementById("searchFacets");
+  if(fbox){var pc=opts.prod.map(function(id){var on=S.sf.product.indexOf(id)>=0;return '<button class="schip" data-sfp="'+id+'" '+(on?'aria-pressed="true"':'')+'>'+esc(prodFacetLabel(id))+'</button>';}).join("");
+    var tc=opts.typ.map(function(t){var on=S.sf.type.indexOf(t)>=0;return '<button class="schip" data-sft="'+t+'" '+(on?'aria-pressed="true"':'')+'>'+L(DIA[t].label)+'</button>';}).join("");
+    fbox.innerHTML='<span class="fl">'+L(T.filterProduct)+'</span>'+pc+'<span class="sep"></span><span class="fl">'+L(T.filterType)+'</span>'+tc;
+    fbox.querySelectorAll("[data-sfp]").forEach(function(b){b.onclick=function(){toggleFacet(S.sf.product,b.getAttribute("data-sfp"));renderSearch();};});
+    fbox.querySelectorAll("[data-sft]").forEach(function(b){b.onclick=function(){toggleFacet(S.sf.type,b.getAttribute("data-sft"));renderSearch();};});}
+  var box=document.getElementById("searchResults");if(!box)return;
+  box.innerHTML=res.length?res.map(function(d,i){var tag=d.type?d.type.slice(0,3).toUpperCase():"OV";return '<a class="result'+(i===0?' act':'')+'" href="#" data-route="'+d.route+'"><span class="tag" style="color:'+(d.type?diaColor(d.type):'var(--text-soft)')+';background:'+(d.type?diaSoft(d.type):'var(--bg-subtle)')+'">'+tag+'</span><span><span class="rt">'+esc(d.title)+'</span><br><span class="rc">'+esc(d.crumb)+'</span></span></a>';}).join(""):'<div class="empty">'+L({en:"No matching pages.",ja:"一致するページがありません。"})+'</div>';
+  var hint=document.getElementById("searchHint");if(hint)hint.textContent=L(T.searchMock)+" · "+res.length+" "+L(T.resultCount);if(inp)inp.placeholder=L(T.search);
+  box.querySelectorAll("[data-route]").forEach(function(a){a.onclick=function(e){e.preventDefault();go(a.getAttribute("data-route"));};});}
+function toggleFacet(arr,v){var i=arr.indexOf(v);if(i>=0)arr.splice(i,1);else arr.push(v);}
+function openSearch(){var m=document.getElementById("searchModal");m.hidden=false;var i=document.getElementById("searchInput");i.value="";renderSearch();setTimeout(function(){i.focus();},20);}
+function closeSearch(){var m=document.getElementById("searchModal");if(m)m.hidden=true;}
+function wire(){
+  document.querySelectorAll("[data-route]").forEach(function(a){if(a.closest("#searchResults"))return;a.addEventListener("click",function(e){e.preventDefault();var tf=a.getAttribute("data-tutfilter");if(tf){S.tut.product=[tf];S.tut.audience=[];}go(a.getAttribute("data-route"));});});
+  document.querySelectorAll("[data-product-sw]").forEach(function(b){b.addEventListener("click",function(){var id=b.getAttribute("data-product-sw");S.product=id;var ov=tabRouteFor(id,"overview");if(ov){go(ov);}else{S.route="__ph";closeSearch();render();window.scrollTo(0,0);}});});
+  document.querySelectorAll("[data-lang]").forEach(function(b){b.addEventListener("click",function(){S.lang=b.getAttribute("data-lang");render();});});
+  var tt=document.getElementById("toggleTheme");if(tt)tt.addEventListener("click",function(){S.dark=!S.dark;render();});
+  var os=document.getElementById("openSearch");if(os)os.addEventListener("click",openSearch);
+  document.querySelectorAll("[data-fb]").forEach(function(b){b.addEventListener("click",function(){S.fb[S.route]=b.getAttribute("data-fb");render();});});
+  var rb=document.getElementById("reportBtn");if(rb)rb.addEventListener("click",function(){alert(S.lang==="ja"?"問題報告はプロトタイプではモックです。":"Issue reporting is mocked in this prototype.");});
+  document.querySelectorAll("[data-toc]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();var t=document.getElementById(a.getAttribute("data-toc"));if(t)t.scrollIntoView({behavior:"smooth",block:"start"});});});
+  document.querySelectorAll("[data-anchor]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();var t=document.getElementById(a.getAttribute("data-anchor"));if(t)t.scrollIntoView({behavior:"smooth",block:"start"});});});
+  document.querySelectorAll("[data-grp]").forEach(function(b){b.addEventListener("click",function(){var g=b.getAttribute("data-grp");S.collapsed[g]=!S.collapsed[g];render();});});
+  document.querySelectorAll("[data-fprod]").forEach(function(b){b.addEventListener("click",function(){toggleFilter("product",b.getAttribute("data-fprod"));});});
+  document.querySelectorAll("[data-faud]").forEach(function(b){b.addEventListener("click",function(){toggleFilter("audience",b.getAttribute("data-faud"));});});
+}
+function toggleFilter(kind,val){var arr=S.tut[kind];var i=arr.indexOf(val);if(i>=0)arr.splice(i,1);else arr.push(val);render();}
+document.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();var m=document.getElementById("searchModal");if(m.hidden)openSearch();else closeSearch();}if(e.key==="Escape")closeSearch();});
+document.getElementById("searchModal").addEventListener("click",function(e){if(e.target.id==="searchModal")closeSearch();});
+document.getElementById("searchInput").addEventListener("input",renderSearch);
+render();
+</script>
+</body>
+</html>
