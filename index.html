@@ -111,6 +111,16 @@ article ul{color:var(--text-soft);margin:0 0 14px;padding-left:22px;}article li{
 .seealso a{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text-soft);border:1px solid var(--border);border-radius:8px;padding:5px 11px;margin:0 6px 6px 0;text-decoration:none;}
 .seealso a:hover{border-color:var(--accent);color:var(--accent);}
 .seealso .dot{width:7px;height:7px;border-radius:2px;flex:none;}
+.seealso .sa-item{margin:0 0 8px;line-height:1.5;}
+.seealso .sa-item:last-child{margin-bottom:0;}
+.seealso .sa-item a{display:inline;border:none;border-radius:0;padding:0;margin:0;font-size:14px;font-weight:500;color:var(--accent);}
+.seealso .sa-item a:hover{border:none;color:var(--accent);text-decoration:underline;}
+.seealso .sa-note{display:inline;font-size:12.5px;color:var(--text-muted);}
+.hovercard{position:fixed;z-index:60;max-width:300px;background:var(--surface);border:1px solid var(--border-strong);border-radius:10px;box-shadow:var(--shadow);padding:11px 13px;pointer-events:none;}
+.hovercard .hc-top{margin-bottom:6px;}
+.hovercard .hc-tab{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);}
+.hovercard .hc-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.35;}
+.hovercard .hc-lead{font-size:12.5px;color:var(--text-soft);margin-top:5px;line-height:1.5;}
 .docmeta{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;font-size:12.5px;color:var(--text-muted);}
 .upd{display:flex;gap:16px;padding:13px 0;border-bottom:1px solid var(--border);}
 .upd-date{flex:none;width:120px;font-size:12.5px;color:var(--text-muted);}
@@ -291,7 +301,7 @@ PAGES["cms/c-operation"]={section:"cms",tab:"concepts",type:"concepts",title:{en
 PAGES["cms/howto-manage"]={section:"cms",tab:"how-to",type:"howto",title:{en:"Manage content items",ja:"コンテンツアイテムを管理する"},lead:{en:"Goal-oriented steps to create, edit and bulk-update items. Assumes a model with fields exists.",ja:"アイテムの作成・編集・一括更新の手順。フィールドを持つモデルがある前提です。"},updated:{en:"July 2, 2026",ja:"2026年7月2日"},
   toc:[{id:"h-create",l:{en:"Create",ja:"作成"}},{id:"h-edit",l:{en:"Edit & version",ja:"編集とバージョン"}},{id:"h-bulk",l:{en:"Bulk actions",ja:"一括操作"}}],
   body:function(){return "<h2 id=\"h-create\">"+L({en:"Create an item",ja:"アイテムを作成する"})+"</h2><p>"+L({en:"Open <b>Content</b>, select your model, click <b>+ New item</b>, fill fields, then Save draft or Publish.",ja:"<b>コンテンツ</b>を開きモデルを選択、<b>＋新規アイテム</b>で入力し、下書き保存または公開します。"})+"</p><h2 id=\"h-edit\">"+L({en:"Edit & version",ja:"編集とバージョン管理"})+"</h2><p>"+L({en:"Editing creates a new draft version; earlier versions stay in history.",ja:"編集で新しい下書き版が作られ、以前の版は履歴に残ります。"})+"</p><h2 id=\"h-bulk\">"+L({en:"Bulk actions",ja:"一括操作"})+"</h2><p>"+L({en:"Select rows and publish, tag or delete many at once.",ja:"行を選択して公開・タグ付け・削除を一括適用します。"})+"</p>";},next:"cms/c-operation",refs:["cms/r-fields","cms/c-schema"]};
-PAGES["cms/r-fields"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field types",ja:"フィールド型"},lead:{en:"The kinds of input fields you can add to a model. Each entry is self-contained — copy its anchor to cite it directly.",ja:"モデルに設けられる入力欄の種類。各項目は自己完結し、アンカーで直接引用できます。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},stale:true,isRefCms:true,refs:["cms/c-schema"]};
+PAGES["cms/r-fields"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field types",ja:"フィールド型"},lead:{en:"The kinds of input fields you can add to a model. Each entry is self-contained — copy its anchor to cite it directly.",ja:"モデルに設けられる入力欄の種類。各項目は自己完結し、アンカーで直接引用できます。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},stale:true,isRefCms:true,refs:[{route:"cms/c-relations",note:{en:"How the Reference field type links one model to another.",ja:"「参照」型で他のモデルとつなぐときの考え方"}},"cms/c-validation",{route:"cms/r-models",note:{en:"The container that groups typed fields.",ja:"型を持つフィールドをまとめる入れ物"}}]};
 PAGES["cms/r-attributes"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field attributes",ja:"フィールド属性"},lead:{en:"The rules you can set on each field.",ja:"各入力欄に付けられるルール。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},
   body:function(){var A=[["Required",{en:"The field must have a value.",ja:"値が必須。"}],["Unique",{en:"No duplicate values across items.",ja:"アイテム間で重複を禁止。"}],["Multiple",{en:"Allow several values in one field.",ja:"1つの欄に複数値を許可。"}],["Use as title",{en:"Treat this field as the item's title.",ja:"この欄をアイテムのタイトルとして扱う。"}]];return A.map(function(a,i){return '<section class="refitem" id="a-'+i+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3>'+a[0]+'</h3></div><p style="margin:0;color:var(--text-soft);font-size:14px">'+L(a[1])+'</p></section>';}).join("");},refs:["cms/r-fields","cms/c-validation"]};
 PAGES["cms/r-models"]={section:"cms",tab:"reference",type:"reference",title:{en:"Models",ja:"モデル"},lead:{en:"The mechanism for defining a content type (a data container) — naming, keys, and export formats such as CSV and JSON.",ja:"コンテンツの型（データの入れ物）を定義する仕組み。名前・キー・CSV/JSON 等の書き出し形式。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},
@@ -406,7 +416,7 @@ function tabTitle(tab){return L(TABTITLE[tab])||tab;}
 function sectionPages(secId){return Object.keys(PAGES).filter(function(k){return PAGES[k].section===secId&&!PAGES[k].standalone;});}
 function tabRouteFor(secId,tab){var ks=sectionPages(secId).filter(function(k){return PAGES[k].tab===tab;});return ks[0]||null;}
 function accentFor(secId){var s=sec(secId);return (s&&s.accent)||"cms";}
-function go(route){if(!route)return;S.route=route;var p=PAGES[route];if(p&&p.section&&!(p.standalone&&p.type==="tutorial")){S.product=p.section;}closeSearch();render();window.scrollTo(0,0);}
+function go(route){if(!route)return;hideHovercard();S.route=route;var p=PAGES[route];if(p&&p.section&&!(p.standalone&&p.type==="tutorial")){S.product=p.section;}closeSearch();render();window.scrollTo(0,0);}
 function render(){
   document.documentElement.setAttribute("data-theme",S.dark?"dark":"light");
   document.documentElement.setAttribute("data-product",accentFor(S.product));
@@ -500,13 +510,14 @@ function overviewHub(secId){var cfg=sec(secId);if(!cfg)return "";var tabs=cfg.ta
   cards=cards.filter(Boolean);
   if(!cards.length)return "";
   return '<div class="sect" style="margin-top:28px"><div class="sect-h">'+L(HUB.heading)+'</div><div class="sect-s">'+L(HUB.sub)+'</div><div class="prodgrid">'+cards.join("")+'</div></div>';}
+function refRoute(r){return typeof r==="string"?r:r.route;}
 function seeAlso(routes){
-  var byType={};routes.filter(function(r){return PAGES[r];}).forEach(function(r){var t=PAGES[r].type||"other";(byType[t]=byType[t]||[]).push(r);});
+  var byType={};routes.filter(function(r){return PAGES[refRoute(r)];}).forEach(function(r){var rt=refRoute(r);var t=PAGES[rt].type||"other";(byType[t]=byType[t]||[]).push(r);});
   var order=["concepts","howto","reference","other"];
   var groups=order.filter(function(t){return byType[t];}).map(function(t){
     var label=t==="other"?L({en:"Related",ja:"関連"}):L(DIA[t].label);
-    var links=byType[t].map(function(r){return '<a href="#" data-route="'+r+'">'+esc(L(PAGES[r].title))+'</a>';}).join("");
-    return '<div class="sa-group"><div class="sa-type">'+label+'</div>'+links+'</div>';}).join("");
+    var items=byType[t].map(function(r){var rt=refRoute(r);var note=(typeof r==="object"&&r.note)?'<span class="sa-note">'+(S.lang==="ja"?"：":": ")+esc(L(r.note))+'</span>':'';return '<div class="sa-item"><a href="#" data-route="'+rt+'">'+esc(L(PAGES[rt].title))+'</a>'+note+'</div>';}).join("");
+    return '<div class="sa-group"><div class="sa-type">'+label+'</div>'+items+'</div>';}).join("");
   return groups?'<div class="seealso"><div class="lbl">'+L(T.seeAlso)+'</div>'+groups+'</div>':'';}
 function relatedTutorials(p){
   var secId=p.section;if(!secId)return "";
@@ -519,7 +530,7 @@ function tryNext(p){
   var links=others.map(function(it){return '<a href="#" data-route="'+it.route+'">'+esc(L(PAGES[it.route].title))+'</a>';}).join("");
   links+='<a href="#" data-route="tutorials">'+L(T.browseTut)+'</a>';
   return '<div class="seealso"><div class="lbl">'+L(T.tryNext)+'</div><p style="font-size:13px;color:var(--text-muted);margin:0 0 10px">'+L({en:"Now that you can do this, try building something else:",ja:"ここまでできたら、次はこれを作ってみましょう："})+'</p>'+links+'</div>';}
-function refCmsBody(){return '<p>'+L({en:"Wondering why fields have types? See ",ja:"なぜ型があるのか？ "})+'<a href="#" data-route="cms/c-schema">'+L({en:"Decide your model structure first",ja:"モデルの構造を先に決める"})+'</a></p>'+FIELDS.map(function(f,i){var id="f-"+f.n.toLowerCase().replace(/[^a-z]+/g,"-");return '<section class="refitem" id="'+id+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3>'+esc(f.n)+'</h3><code>'+esc(f.t)+'</code></div><p style="margin:0 0 6px;color:var(--text-soft);font-size:14px">'+L(f.d)+'</p><div style="font-size:12.5px;color:var(--text-muted)"><b style="color:var(--text-soft)">'+L({en:"Use for",ja:"用途"})+':</b> '+L(f.u)+'</div></section>';}).join("");}
+function refCmsBody(){return '<p>'+L({en:"Each field has a type that decides what it can hold. Before choosing one, it helps to decide your ",ja:"各フィールドには、何を入れられるかを決める型があります。型を選ぶ前に、まず"})+'<a href="#" data-route="cms/c-schema">'+L({en:"model structure",ja:"モデルの構造"})+'</a>'+L({en:". Separately from the type, each field can carry ",ja:"を決めておくと選びやすくなります。型とは別に、各フィールドには"})+'<a href="#" data-route="cms/r-attributes">'+L({en:"input rules",ja:"入力ルール"})+'</a>'+L({en:"; to add and edit the items that use them, see ",ja:"も設定できます。これらのフィールドを持つアイテムの追加・編集は"})+'<a href="#" data-route="cms/howto-manage">'+L({en:"managing content items",ja:"コンテンツアイテムの管理"})+'</a>'+L({en:".",ja:"を参照してください。"})+'</p>'+FIELDS.map(function(f,i){var id="f-"+f.n.toLowerCase().replace(/[^a-z]+/g,"-");return '<section class="refitem" id="'+id+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3>'+esc(f.n)+'</h3><code>'+esc(f.t)+'</code></div><p style="margin:0 0 6px;color:var(--text-soft);font-size:14px">'+L(f.d)+'</p><div style="font-size:12.5px;color:var(--text-muted)"><b style="color:var(--text-soft)">'+L({en:"Use for",ja:"用途"})+':</b> '+L(f.u)+'</div></section>';}).join("");}
 function refApiBody(){return '<p>'+L({en:"Each namespace below is self-contained — copy its anchor to cite it directly.",ja:"以下の各名前空間は自己完結です。アンカーで直接引用できます。"})+'</p>'+APIREF.map(function(a,i){var id="api-"+a.n.replace(/[^a-zA-Z]+/g,"-").toLowerCase();return '<section class="refitem" id="'+id+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3 style="font-family:var(--font-mono);font-size:14px">'+esc(a.n)+'</h3></div><p style="margin:0;color:var(--text-soft);font-size:14px">'+L(a.d)+'</p></section>';}).join("");}
 function crumbs(p){var parts=[{l:L(T.docs),r:"home"}];
   if(p.standalone){parts.push({l:L(T.tutorials),r:"tutorials"});}
@@ -589,6 +600,23 @@ function wire(){
   document.querySelectorAll("[data-faud]").forEach(function(b){b.addEventListener("click",function(){toggleFilter("audience",b.getAttribute("data-faud"));});});
 }
 function toggleFilter(kind,val){var arr=S.tut[kind];var i=arr.indexOf(val);if(i>=0)arr.splice(i,1);else arr.push(val);render();}
+var hcTimer=null,hcEl=null;
+function hcCard(){if(!hcEl){hcEl=document.createElement("div");hcEl.className="hovercard";hcEl.hidden=true;document.body.appendChild(hcEl);}return hcEl;}
+function hideHovercard(){if(hcTimer){clearTimeout(hcTimer);hcTimer=null;}if(hcEl)hcEl.hidden=true;}
+function showHovercard(a){var route=a.getAttribute("data-route");var p=PAGES[route];if(!p)return;
+  var el=hcCard();
+  var top=p.type?typePill(p.type):(p.tab?'<span class="hc-tab">'+tabTitle(p.tab)+'</span>':'');
+  var lead=p.lead?'<div class="hc-lead">'+esc(L(p.lead))+'</div>':'';
+  el.innerHTML='<div class="hc-top">'+top+'</div><div class="hc-title">'+esc(L(p.title))+'</div>'+lead;
+  el.hidden=false;
+  var r=a.getBoundingClientRect();var cw=el.offsetWidth,ch=el.offsetHeight;
+  var left=Math.max(12,Math.min(r.left,window.innerWidth-cw-12));
+  var tp=r.bottom+8;if(tp+ch>window.innerHeight-8)tp=Math.max(8,r.top-ch-8);
+  el.style.left=left+"px";el.style.top=tp+"px";}
+function bodyProseLink(t){var a=t&&t.closest?t.closest("a[data-route]"):null;if(!a)return null;if(!a.closest(".content-wrap"))return null;if(a.closest(".seealso")||a.closest(".pager")||a.closest(".crumbs"))return null;if(!a.closest("p")&&!a.closest("li"))return null;return PAGES[a.getAttribute("data-route")]?a:null;}
+document.addEventListener("mouseover",function(e){var a=bodyProseLink(e.target);if(!a)return;if(hcTimer)clearTimeout(hcTimer);hcTimer=setTimeout(function(){showHovercard(a);},250);});
+document.addEventListener("mouseout",function(e){if(bodyProseLink(e.target))hideHovercard();});
+window.addEventListener("scroll",hideHovercard,true);
 document.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();var m=document.getElementById("searchModal");if(m.hidden)openSearch();else closeSearch();}if(e.key==="Escape")closeSearch();});
 document.getElementById("searchModal").addEventListener("click",function(e){if(e.target.id==="searchModal")closeSearch();});
 document.getElementById("searchInput").addEventListener("input",renderSearch);
