@@ -90,10 +90,10 @@ article ul{color:var(--text-soft);margin:0 0 14px;padding-left:22px;}article li{
 .stub{padding:20px 22px;border:1px dashed var(--border-strong);border-radius:12px;color:var(--text-muted);font-size:14px;background:var(--bg-subtle);}
 .codeblock{border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:var(--code-bg);font-family:var(--font-mono);font-size:12.5px;color:var(--text-soft);overflow-x:auto;margin:0 0 16px;line-height:1.7;}
 .codeblock .k{color:#a855f7;}.codeblock .cm{color:var(--text-muted);}
-.refitem{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--surface);scroll-margin:100px;}
-.refitem .hd{display:flex;align-items:center;gap:11px;margin-bottom:7px;}
-.refitem .num{width:26px;height:26px;flex:none;border-radius:7px;background:var(--t-reference-soft);color:var(--t-reference);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12px;font-weight:600;}
-.refitem h3{font-size:15px;margin:0;flex:1;}
+.refitem{margin:0 0 18px;}
+.refitem h3{font-size:15.5px;font-weight:600;margin:0 0 5px;scroll-margin:100px;}
+.refitem>p{margin:0;color:var(--text-soft);font-size:14px;line-height:1.6;}
+.refitem .ref-extra{margin-top:6px;}
 .pager{display:flex;gap:12px;margin:30px 0 0;}
 .pagecard{flex:1;min-width:0;display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:12px;padding:13px 16px;background:var(--surface);color:inherit;text-decoration:none;}
 .pagecard:hover{border-color:var(--accent);box-shadow:var(--shadow);}
@@ -121,6 +121,13 @@ article ul{color:var(--text-soft);margin:0 0 14px;padding-left:22px;}article li{
 .hovercard .hc-tab{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);}
 .hovercard .hc-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.35;}
 .hovercard .hc-lead{font-size:12.5px;color:var(--text-soft);margin-top:5px;line-height:1.5;}
+.tablewrap{overflow-x:auto;margin:18px 0 24px;}
+.reftable{width:100%;border-collapse:collapse;font-size:13.5px;}
+.reftable th,.reftable td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+.reftable th{font-weight:700;color:var(--text-soft);background:var(--bg-subtle);white-space:nowrap;}
+.reftable td:first-child{font-weight:500;color:var(--text);}
+.refitem .shapes{margin:8px 0 0;padding-left:1.5em;}
+.refitem .shapes li{font-size:14px;color:var(--text-soft);line-height:1.7;}
 .docmeta{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;font-size:12.5px;color:var(--text-muted);}
 .upd{display:flex;gap:16px;padding:13px 0;border-bottom:1px solid var(--border);}
 .upd-date{flex:none;width:120px;font-size:12.5px;color:var(--text-muted);}
@@ -301,9 +308,10 @@ PAGES["cms/c-operation"]={section:"cms",tab:"concepts",type:"concepts",title:{en
 PAGES["cms/howto-manage"]={section:"cms",tab:"how-to",type:"howto",title:{en:"Manage content items",ja:"コンテンツアイテムを管理する"},lead:{en:"Goal-oriented steps to create, edit and bulk-update items. Assumes a model with fields exists.",ja:"アイテムの作成・編集・一括更新の手順。フィールドを持つモデルがある前提です。"},updated:{en:"July 2, 2026",ja:"2026年7月2日"},
   toc:[{id:"h-create",l:{en:"Create",ja:"作成"}},{id:"h-edit",l:{en:"Edit & version",ja:"編集とバージョン"}},{id:"h-bulk",l:{en:"Bulk actions",ja:"一括操作"}}],
   body:function(){return "<h2 id=\"h-create\">"+L({en:"Create an item",ja:"アイテムを作成する"})+"</h2><p>"+L({en:"Open <b>Content</b>, select your model, click <b>+ New item</b>, fill fields, then Save draft or Publish.",ja:"<b>コンテンツ</b>を開きモデルを選択、<b>＋新規アイテム</b>で入力し、下書き保存または公開します。"})+"</p><h2 id=\"h-edit\">"+L({en:"Edit & version",ja:"編集とバージョン管理"})+"</h2><p>"+L({en:"Editing creates a new draft version; earlier versions stay in history.",ja:"編集で新しい下書き版が作られ、以前の版は履歴に残ります。"})+"</p><h2 id=\"h-bulk\">"+L({en:"Bulk actions",ja:"一括操作"})+"</h2><p>"+L({en:"Select rows and publish, tag or delete many at once.",ja:"行を選択して公開・タグ付け・削除を一括適用します。"})+"</p>";},next:"cms/c-operation",refs:["cms/r-fields","cms/c-schema"]};
-PAGES["cms/r-fields"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field types",ja:"フィールド型"},lead:{en:"The kinds of input fields you can add to a model. Each entry is self-contained — copy its anchor to cite it directly.",ja:"モデルに設けられる入力欄の種類。各項目は自己完結し、アンカーで直接引用できます。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},stale:true,isRefCms:true,refs:[{route:"cms/c-relations",note:{en:"How the Reference field type links one model to another.",ja:"「参照」型で他のモデルとつなぐときの考え方"}},"cms/c-validation",{route:"cms/r-models",note:{en:"The container that groups typed fields.",ja:"型を持つフィールドをまとめる入れ物"}}]};
-PAGES["cms/r-attributes"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field attributes",ja:"フィールド属性"},lead:{en:"The rules you can set on each field.",ja:"各入力欄に付けられるルール。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},
-  body:function(){var A=[["Required",{en:"The field must have a value.",ja:"値が必須。"}],["Unique",{en:"No duplicate values across items.",ja:"アイテム間で重複を禁止。"}],["Multiple",{en:"Allow several values in one field.",ja:"1つの欄に複数値を許可。"}],["Use as title",{en:"Treat this field as the item's title.",ja:"この欄をアイテムのタイトルとして扱う。"}]];return A.map(function(a,i){return '<section class="refitem" id="a-'+i+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3>'+a[0]+'</h3></div><p style="margin:0;color:var(--text-soft);font-size:14px">'+L(a[1])+'</p></section>';}).join("");},refs:["cms/r-fields","cms/c-validation"]};
+stub("cms/howto-addfield","cms","how-to","howto",{en:"Add a field to a model",ja:"モデルにフィールドを追加する"});
+PAGES["cms/r-fields"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field types",ja:"フィールド型"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},isRefCms:true,refs:[{route:"cms/r-attributes",note:{en:"The rules you can set on a field: required, unique, multiple, use-as-title, and so on.",ja:"フィールドに設定できるルール（必須・重複禁止・複数値・タイトル欄にするなど）"}},"cms/howto-addfield"]};
+PAGES["cms/r-attributes"]={section:"cms",tab:"reference",type:"reference",title:{en:"Field attributes",ja:"フィールド属性"},lead:{en:"The rules you can set on each field.",ja:"各入力欄に付けられるルール。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},stale:true,
+  body:function(){var A=[["Required",{en:"The field must have a value.",ja:"値が必須。"}],["Unique",{en:"No duplicate values across items.",ja:"アイテム間で重複を禁止。"}],["Multiple",{en:"Allow several values in one field.",ja:"1つの欄に複数値を許可。"}],["Use as title",{en:"Treat this field as the item's title.",ja:"この欄をアイテムのタイトルとして扱う。"}]];return A.map(function(a,i){return '<section class="refitem"><h3 id="a-'+i+'">'+a[0]+'</h3><p>'+L(a[1])+'</p></section>';}).join("");},refs:["cms/r-fields","cms/c-validation"]};
 PAGES["cms/r-models"]={section:"cms",tab:"reference",type:"reference",title:{en:"Models",ja:"モデル"},lead:{en:"The mechanism for defining a content type (a data container) — naming, keys, and export formats such as CSV and JSON.",ja:"コンテンツの型（データの入れ物）を定義する仕組み。名前・キー・CSV/JSON 等の書き出し形式。"},updated:{en:"June 28, 2026",ja:"2026年6月28日"},
   body:function(){return "<p>"+L({en:"A model groups fields under a name and a key. Its items can be exported as CSV or JSON. To design one well, see",ja:"モデルはフィールドを名前とキーでまとめます。アイテムは CSV / JSON で書き出せます。設計の考え方は"})+" <a href=\"#\" data-route=\"cms/c-schema\">"+L({en:"model structure",ja:"モデルの構造"})+"</a>"+L({en:".",ja:"を参照。"})+"</p>";},refs:["cms/c-schema"]};
 [
@@ -396,13 +404,22 @@ var COMMUNITY=[
   {id:"x",nm:"X (Twitter)",role:{en:"Announcements & showcase",ja:"お知らせ・作例の紹介"},url:"#"}
 ];
 var FIELDS=[
-  {n:"Text",t:"string",d:{en:"Single-line plain text.",ja:"単一行のプレーンテキスト。"},u:{en:"Names, short labels",ja:"名前・短いラベル"}},
-  {n:"Markdown",t:"string",d:{en:"Rich text in Markdown.",ja:"Markdownのリッチテキスト。"},u:{en:"Article bodies, briefings",ja:"記事本文・ブリーフィング"}},
-  {n:"Integer",t:"number",d:{en:"Whole numbers with optional range checks.",ja:"任意で範囲検証できる整数。"},u:{en:"Capacity, population",ja:"収容人数・人口"}},
-  {n:"Select",t:"enum",d:{en:"One choice from a defined set.",ja:"定義済み選択肢から1つ。"},u:{en:"Status, hazard category",ja:"ステータス・災害種別"}},
-  {n:"Date",t:"datetime",d:{en:"Calendar date, optionally with time.",ja:"任意で時刻を含む日付。"},u:{en:"Published-at, event dates",ja:"公開日・イベント日"}},
-  {n:"Asset",t:"ref",d:{en:"Reference to a file in the asset library.",ja:"アセットライブラリのファイル参照。"},u:{en:"Images, GeoJSON, PDFs",ja:"画像・GeoJSON・PDF"}},
-  {n:"Geometry (Editor)",t:"geojson",d:{en:"Draw points, lines and polygons on a map.",ja:"地図上で点・線・面を描画。"},u:{en:"Evacuation sites, routes",ja:"避難所・経路"}}
+  {ja:"テキスト",en:"Text",s:{ja:"1行のテキスト",en:"A single line of text"},u:{ja:"見出しやタイトルなど短い文字列",en:"Short strings such as headings and titles"},d:{ja:"1行のテキストを入れる欄です。見出しやタイトルなど、短い文字列を格納します。",en:"A field for a single line of text. Stores short strings such as headings and titles."}},
+  {ja:"テキストエリア",en:"TextArea",s:{ja:"複数行のテキスト",en:"Multiple lines of text"},u:{ja:"段落など長めの文章",en:"Longer text such as paragraphs"},d:{ja:"複数行のテキストを入れる欄です。段落のある長めの文章を格納します。",en:"A field for multiple lines of text. Stores longer text with paragraphs."}},
+  {ja:"マークダウン",en:"Markdown text",s:{ja:"マークダウン記法に対応したテキスト",en:"Markdown-formatted text"},u:{ja:"書式付きの文章",en:"Formatted text"},d:{ja:"マークダウン記法に対応したテキストを入れる欄です。見出しや強調などの書式を含む文章を格納します。",en:"A field for Markdown-formatted text. Stores text with formatting such as headings and emphasis."}},
+  {ja:"整数",en:"Int",s:{ja:"整数",en:"Whole numbers"},u:{ja:"個数や順番など小数を含まない数値",en:"Counts and ordering, without decimals"},d:{ja:"整数を入れる欄です。小数を含まない数値を格納します。",en:"A field for whole numbers. Stores numbers with no decimal part."}},
+  {ja:"小数",en:"Float",s:{ja:"小数を含む数値",en:"Numbers with decimals"},u:{ja:"割合や測定値など小数点以下が必要な数値",en:"Ratios and measurements that need decimals"},d:{ja:"小数を含む数値を入れる欄です。小数点以下が必要な数値を格納します。",en:"A field for numbers with decimals. Stores values that need digits after the decimal point."}},
+  {ja:"ブーリアン",en:"Boolean",s:{ja:"真（true）／偽（false）の値",en:"A true / false value"},u:{ja:"オン／オフのような二択の状態",en:"On/off style two-way states"},d:{ja:"真（true）または偽（false）のどちらかを入れる欄です。オンとオフのような二択の状態を格納します。",en:"A field for either true or false. Stores a two-way state such as on/off."}},
+  {ja:"チェックボックス",en:"Check Box",s:{ja:"チェックボックスのリストからの選択",en:"Selections from a checkbox list"},u:{ja:"複数項目のオン／オフをまとめて扱う",en:"Toggling several items at once"},d:{ja:"チェックボックスのリストから選ぶ欄です。並んだ項目のオン／オフを選択します。",en:"A field for choosing from a list of checkboxes. Toggles the listed items on or off."}},
+  {ja:"選択",en:"Option",s:{ja:"あらかじめ用意した選択肢からの選択",en:"A choice from preset options"},u:{ja:"決まった候補から選ばせる",en:"Choosing from a fixed set of candidates"},d:{ja:"あらかじめ用意した選択肢から選ぶ欄です。決まった候補の中から選択します。",en:"A field for choosing from preset options. Selects from a fixed set of candidates."}},
+  {ja:"タグ",en:"Tag",s:{ja:"あらかじめ用意したタグからの選択",en:"A choice from preset tags"},u:{ja:"分類やラベル付け",en:"Classification and labelling"},d:{ja:"あらかじめ用意したタグのリストから選ぶ欄です。",en:"A field for choosing from a preset list of tags."},extra:{ja:"各タグには色を割り当てられます。割り当てられる色は11色です。",en:"Each tag can be assigned a color; 11 colors are available."}},
+  {ja:"日付",en:"Date",s:{ja:"日付",en:"A date"},u:{ja:"日付を記録する",en:"Recording a date"},d:{ja:"日付を入れる欄です。日付を格納します。",en:"A field for a date. Stores a date."}},
+  {ja:"URL",en:"URL",s:{ja:"http／https の URL",en:"An http / https URL"},u:{ja:"リンク先を記録する",en:"Recording a link target"},d:{ja:"http または https の URL を入れる欄です。",en:"A field for an http or https URL."}},
+  {ja:"アセット",en:"Asset",s:{ja:"アップロードしたアセット（ファイル）",en:"An uploaded asset (file)"},u:{ja:"画像や書類などのファイルを紐づける",en:"Attaching files such as images and documents"},d:{ja:"アップロードしたアセット（ファイル）を紐づける欄です。画像や書類などのファイルを格納します。",en:"A field that links an uploaded asset (file). Holds files such as images and documents."}},
+  {ja:"参照",en:"Reference",s:{ja:"他のモデルのアイテムへの参照",en:"A reference to an item in another model"},u:{ja:"モデル間の関連づけ",en:"Relating one model to another"},d:{ja:"他のモデルのアイテムを参照する欄です。モデルとモデルの間の関連づけに使います。",en:"A field that references an item in another model. Used to relate one model to another."}},
+  {ja:"グループ",en:"Group",s:{ja:"定義済みのグループ",en:"A predefined group"},u:{ja:"複数のフィールドのまとまりを再利用する",en:"Reusing a bundle of fields"},d:{ja:'定義済みの<a href="#" data-route="cms/r-groups">グループ</a>を入れる欄です。複数のフィールドをまとめたグループを、フィールドとして再利用します。',en:'A field that holds a predefined <a href="#" data-route="cms/r-groups">group</a>. Reuses a bundle of several fields as a single field.'}},
+  {ja:"ジオメトリオブジェクト",en:"Geometry Object",s:{ja:"GeoJSON 形式のジオメトリ",en:"Geometry in GeoJSON format"},u:{ja:"GeoJSON を入力して地物を扱う",en:"Working with features via GeoJSON"},d:{ja:"GeoJSON 形式でジオメトリを入力する欄です。入力した内容はプレビューできます。対応する形状を次から選びます。",en:"A field for entering geometry in GeoJSON format. The input can be previewed. Choose from the following shapes:"},shapes:["Point","MultiPoint","LineString","MultiLineString","Polygon","MultiPolygon","GeometryCollection"]},
+  {ja:"ジオメトリエディタ",en:"Geometry Editor",s:{ja:"地図上で描いたジオメトリ",en:"Geometry drawn on a map"},u:{ja:"地図上で地物を描いて扱う",en:"Working with features by drawing on a map"},d:{ja:"地図上に描いてジオメトリを入力する欄です。対応する形状を次から選びます。",en:"A field for entering geometry by drawing on a map. Choose from the following shapes:"},shapes:["Point","LineString","Polygon","Any"]}
 ];
 var APIREF=[
   {n:"reearth.viewer",d:{en:"Camera, scene and viewer state.",ja:"カメラ・シーン・ビューア状態。"}},
@@ -530,8 +547,18 @@ function tryNext(p){
   var links=others.map(function(it){return '<a href="#" data-route="'+it.route+'">'+esc(L(PAGES[it.route].title))+'</a>';}).join("");
   links+='<a href="#" data-route="tutorials">'+L(T.browseTut)+'</a>';
   return '<div class="seealso"><div class="lbl">'+L(T.tryNext)+'</div><p style="font-size:13px;color:var(--text-muted);margin:0 0 10px">'+L({en:"Now that you can do this, try building something else:",ja:"ここまでできたら、次はこれを作ってみましょう："})+'</p>'+links+'</div>';}
-function refCmsBody(){return '<p>'+L({en:"Each field has a type that decides what it can hold. Before choosing one, it helps to decide your ",ja:"各フィールドには、何を入れられるかを決める型があります。型を選ぶ前に、まず"})+'<a href="#" data-route="cms/c-schema">'+L({en:"model structure",ja:"モデルの構造"})+'</a>'+L({en:". Separately from the type, each field can carry ",ja:"を決めておくと選びやすくなります。型とは別に、各フィールドには"})+'<a href="#" data-route="cms/r-attributes">'+L({en:"input rules",ja:"入力ルール"})+'</a>'+L({en:"; to add and edit the items that use them, see ",ja:"も設定できます。これらのフィールドを持つアイテムの追加・編集は"})+'<a href="#" data-route="cms/howto-manage">'+L({en:"managing content items",ja:"コンテンツアイテムの管理"})+'</a>'+L({en:".",ja:"を参照してください。"})+'</p>'+FIELDS.map(function(f,i){var id="f-"+f.n.toLowerCase().replace(/[^a-z]+/g,"-");return '<section class="refitem" id="'+id+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3>'+esc(f.n)+'</h3><code>'+esc(f.t)+'</code></div><p style="margin:0 0 6px;color:var(--text-soft);font-size:14px">'+L(f.d)+'</p><div style="font-size:12.5px;color:var(--text-muted)"><b style="color:var(--text-soft)">'+L({en:"Use for",ja:"用途"})+':</b> '+L(f.u)+'</div></section>';}).join("");}
-function refApiBody(){return '<p>'+L({en:"Each namespace below is self-contained — copy its anchor to cite it directly.",ja:"以下の各名前空間は自己完結です。アンカーで直接引用できます。"})+'</p>'+APIREF.map(function(a,i){var id="api-"+a.n.replace(/[^a-zA-Z]+/g,"-").toLowerCase();return '<section class="refitem" id="'+id+'"><div class="hd"><span class="num">'+String(i+1).padStart(2,"0")+'</span><h3 style="font-family:var(--font-mono);font-size:14px">'+esc(a.n)+'</h3></div><p style="margin:0;color:var(--text-soft);font-size:14px">'+L(a.d)+'</p></section>';}).join("");}
+function fieldName(f){return L({ja:f.ja+"（"+f.en+"）",en:f.en});}
+function refCmsBody(){
+  var intro='<p>'+L({ja:'<a href="#" data-route="cms/r-models">モデル</a>のフィールド（入力欄）に設定できる型の一覧です。型は、そのフィールドに何を入れられるか（格納するデータ）を決めます。フィールドを作成するとき、次の型から1つを選びます。',en:'The types you can set on the fields (input columns) of a <a href="#" data-route="cms/r-models">model</a>. A type decides what a field can hold (the data it stores). When you create a field, you choose one of the types below.'})+'</p>';
+  var head='<tr><th>'+L({ja:"型",en:"Type"})+'</th><th>'+L({ja:"何を入れる欄か",en:"What it holds"})+'</th><th>'+L({ja:"主な使いどき",en:"Typical use"})+'</th></tr>';
+  var rows=FIELDS.map(function(f){return '<tr><td>'+esc(fieldName(f))+'</td><td>'+esc(L(f.s))+'</td><td>'+esc(L(f.u))+'</td></tr>';}).join("");
+  var table='<div class="tablewrap"><table class="reftable"><thead>'+head+'</thead><tbody>'+rows+'</tbody></table></div>';
+  var sections=FIELDS.map(function(f){var id="f-"+f.en.toLowerCase().replace(/[^a-z]+/g,"-");
+    var extra=f.extra?'<p class="ref-extra">'+L(f.extra)+'</p>':'';
+    var shapes=f.shapes?'<ul class="shapes">'+f.shapes.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>':'';
+    return '<section class="refitem"><h3 id="'+id+'">'+esc(fieldName(f))+'</h3><p>'+L(f.d)+'</p>'+extra+shapes+'</section>';}).join("");
+  return intro+table+sections;}
+function refApiBody(){return '<p>'+L({en:"Each namespace below is self-contained — copy its anchor to cite it directly.",ja:"以下の各名前空間は自己完結です。アンカーで直接引用できます。"})+'</p>'+APIREF.map(function(a,i){var id="api-"+a.n.replace(/[^a-zA-Z]+/g,"-").toLowerCase();return '<section class="refitem"><h3 id="'+id+'" style="font-family:var(--font-mono);font-size:14px">'+esc(a.n)+'</h3><p>'+L(a.d)+'</p></section>';}).join("");}
 function crumbs(p){var parts=[{l:L(T.docs),r:"home"}];
   if(p.standalone){parts.push({l:L(T.tutorials),r:"tutorials"});}
   else{var cfg=sec(p.section);if(cfg&&cfg.kind==="dev"){parts.push({l:L(T.devTab),r:"developer"});parts.push({l:secName(p.section),r:tabRouteFor(p.section,"overview")});}else if(cfg){parts.push({l:secName(p.section).replace("Re:Earth ",""),r:tabRouteFor(p.section,"overview")});}if(p.type)parts.push({l:L(DIA[p.type].label),r:null});}
