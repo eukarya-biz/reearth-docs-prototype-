@@ -65,6 +65,14 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--code-bg);padd
 .fopt input{width:15px;height:15px;flex:none;accent-color:var(--accent);cursor:pointer;margin:0;}
 .sidebar a .tt{flex:1;min-width:0;}
 .aud-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);border:1px solid var(--border);border-radius:4px;padding:0 5px;flex:none;}
+.aibox{border:1px solid var(--border);border-radius:14px;padding:20px 22px;background:var(--bg-subtle);}
+.aidesc{font-size:13.5px;color:var(--text-soft);margin-bottom:16px;max-width:640px;}
+.ailinks{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.ailink{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--surface);color:inherit;}
+.ailink:hover{border-color:var(--accent);box-shadow:var(--shadow);text-decoration:none;}
+.ailink .aiicon{color:var(--accent);flex:none;display:flex;}
+.ailink .ain{font-family:var(--font-mono);font-size:13.5px;font-weight:600;color:var(--text);display:block;}
+.ailink .aid{font-size:12px;color:var(--text-muted);display:block;margin-top:2px;}
 .sidebar .grp-h .swatch{width:8px;height:8px;border-radius:3px;}
 .sidebar a{display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:8px;font-size:13.5px;color:var(--text-soft);border-left:2px solid transparent;margin-bottom:1px;}
 .sidebar a[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600;border-left-color:var(--accent);}
@@ -220,7 +228,7 @@ a.prodcard:hover{border-color:var(--accent);box-shadow:var(--shadow);text-decora
 .ft-links{display:flex;align-items:center;gap:14px;font-size:12.5px;}
 .ft-ai{display:inline-flex;align-items:center;color:var(--text-soft);font-weight:600;}
 .ft-links a{color:var(--accent);font-family:var(--font-mono);font-size:12px;}
-@media(max-width:1000px){.shell{grid-template-columns:1fr;}.sidebar{display:none;}.content-wrap{grid-template-columns:1fr;}.toc{display:none;}.prodgrid,.tutlist,.commgrid{grid-template-columns:1fr;}}
+@media(max-width:1000px){.shell{grid-template-columns:1fr;}.sidebar{display:none;}.content-wrap{grid-template-columns:1fr;}.toc{display:none;}.prodgrid,.tutlist,.commgrid,.ailinks{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -241,7 +249,7 @@ function L(o){return o&&o[S.lang]!=null?o[S.lang]:(o?o.en:"");}
 var T={
   docs:{en:"Docs",ja:"ドキュメント"},search:{en:"Search docs…",ja:"ドキュメントを検索…"},onThisPage:{en:"On this page",ja:"このページの内容"},
   products:{en:"Products",ja:"製品"},productsSub:{en:"Each product has an overview, concepts, how-to guides and reference.",ja:"各製品にオーバービュー・コンセプト・ハウツーガイド・リファレンスがあります。"},
-  dev:{en:"Developer resources",ja:"開発者向けリソース"},devTab:{en:"Developer",ja:"開発者向け"},
+  dev:{en:"Developer resources",ja:"開発向けリソース"},devTab:{en:"Developer",ja:"開発向け"},
   community:{en:"Community",ja:"コミュニティ"},communitySub:{en:"Ask questions, share what you built, and meet others working with Re:Earth.",ja:"質問する、作ったものを共有する、Re:Earth を使う他の人とつながる。"},openExt:{en:"Open",ja:"開く"},
   devSub:{en:"Separate sites for building on Re:Earth — each with its own overview, guides and API reference. Authored by the Solution Engineering team.",ja:"Re:Earth 上に構築するための独立サイト群。各サイトが独自のオーバービュー・ガイド・API リファレンスを持ちます。Solution Engineering チームが執筆します。"},
   tutorials:{en:"Tutorials",ja:"チュートリアル"},tutSub:{en:"Hands-on lessons across every product — filter by product and audience.",ja:"全製品を横断するハンズオン。製品と対象読者で絞り込めます。"},
@@ -253,7 +261,7 @@ var T={
   searchAll:{en:"All",ja:"すべて"},resultCount:{en:"results",ja:"件"},
   anchorLabel:{en:"Link to this section",ja:"この見出しへのリンク"},
   openapiNote:{en:"This reference is generated from the OpenAPI specification.",ja:"このリファレンスは OpenAPI 仕様から自動生成しています。"},
-  aiReady:{en:"Built for AI readers",ja:"AI 読者に対応"},llmsFull:{en:"Full text for LLMs",ja:"LLM 向け全文"},footNote:{en:"This site publishes machine-readable text for LLMs and AI agents.",ja:"このサイトは LLM・AI エージェント向けの機械可読テキストを配信しています。"},
+  aiReady:{en:"Built for AI readers",ja:"AI 読者に対応"},llmsFull:{en:"Full text for LLMs",ja:"LLM 向け全文"},footNote:{en:"This site publishes machine-readable text for LLMs and AI agents.",ja:"このサイトは LLM・AI エージェント向けの機械可読テキストを配信しています。"},aiUse:{en:"Hand either link to your AI assistant and it can read the whole documentation faster and more accurately than opening pages one by one.",ja:"どちらかのリンクを AI アシスタントに渡すだけで、ページを1つずつ開かせるより速く正確にドキュメント全体を読み取れます。"},llmsIdx:{en:"Site index for AI",ja:"サイトの目次（AI 向け）"},
   openProduct:{en:"Open a product",ja:"製品を開く"},
   noTut:{en:"No tutorials match. Clear a filter.",ja:"該当なし。フィルタを外してください。"},searchMock:{en:"Prototype — search is illustrative",ja:"プロトタイプ — 検索は説明用のモック"},
   stubBody:{en:"This article is in preparation — its outline is agreed and drafting is underway.",ja:"この記事は準備中です（章立ては確定済み、執筆中）。"},
@@ -579,7 +587,8 @@ function home(){var prods=PRODUCT_LIST.map(function(id){var s=sec(id);var live=s
   return '<main class="home" id="main"><div class="hero"><h1>'+L({en:"How can we help?",ja:"お手伝いできることはありますか？"})+'</h1><p>'+L({en:"Documentation, guides and references for the Re:Earth platform.",ja:"Re:Earthプラットフォームのドキュメント・ガイド・リファレンス。"})+'</p></div>'
     +'<div class="sect"><div class="tutbanner"><div style="flex:1"><div style="font-weight:600;font-size:15px;margin-bottom:3px">'+L(T.tutorials)+'</div><div style="font-size:13px;color:var(--text-soft)">'+L(T.tutSub)+'</div></div><button class="cta" data-route="tutorials">'+L(T.browseTut)+' →</button></div></div>'
     +'<div class="sect"><div class="sect-h">'+L(T.products)+'</div><div class="sect-s">'+L(T.productsSub)+'</div><div class="prodgrid">'+prods+'</div></div>'
-    +'<div class="sect"><div class="sect-h">'+L(T.dev)+'</div><div class="sect-s">'+L(T.devSub)+'</div><div class="tutbanner" style="border-color:var(--border);background:var(--bg-subtle)"><div style="flex:1"><div style="font-weight:600;font-size:14px;margin-bottom:2px">'+L({en:"3 developer sites",ja:"3つの開発者向けサイト"})+'</div><div style="font-size:12.5px;color:var(--text-soft)">Visualizer Plugin · CMS Developer · Flow Developer</div></div><button class="cta" data-route="developer">'+L(T.devTab)+' →</button></div></div>'
+    +'<div class="sect"><div class="sect-h">'+L(T.dev)+'</div><div class="sect-s">'+L(T.devSub)+'</div><div class="tutbanner" style="border-color:var(--border);background:var(--bg-subtle)"><div style="flex:1"><div style="font-weight:600;font-size:14px;margin-bottom:2px">'+L({en:"3 developer sites",ja:"3つの開発向けサイト"})+'</div><div style="font-size:12.5px;color:var(--text-soft)">Visualizer Plugin · CMS Developer · Flow Developer</div></div><button class="cta" data-route="developer">'+L(T.devTab)+' →</button></div></div>'
+    +'<div class="sect"><div class="sect-h">'+L(T.aiReady)+'</div><div class="sect-s">'+L(T.footNote)+'</div><div class="aibox"><div class="aidesc">'+L(T.aiUse)+'</div><div class="ailinks"><a href="/llms.txt" target="_blank" rel="noopener" class="ailink"><span class="aiicon">'+svg("ai")+'</span><span><span class="ain">llms.txt</span><span class="aid">'+L(T.llmsIdx)+'</span></span></a><a href="/llms-full.txt" target="_blank" rel="noopener" class="ailink"><span class="aiicon">'+svg("ai")+'</span><span><span class="ain">llms-full.txt</span><span class="aid">'+L(T.llmsFull)+'</span></span></a></div></div></div>'
     +'<div class="sect"><div class="sect-h">'+L(T.community)+'</div><div class="sect-s">'+L(T.communitySub)+'</div><div class="commgrid">'+community()+'</div></div></main>';}
 function community(){return COMMUNITY.map(function(c){return '<a class="commcard" href="'+c.url+'" target="_blank" rel="noopener"><span class="ci">'+svg("ext")+'</span><span class="cbody"><span class="cn">'+esc(c.nm)+'</span><span class="cr">'+L(c.role)+'</span></span><span class="carr">↗</span></a>';}).join("");}
 function developerLanding(){var cards=DEV_LIST.map(function(id){var s=sec(id);var live=s.live;var route=live?tabRouteFor(id,"overview"):null;
