@@ -52,12 +52,19 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--code-bg);padd
 .subbar button{padding:7px 12px;border:none;border-radius:8px;font-size:13.5px;font-weight:500;background:transparent;color:var(--text-soft);white-space:nowrap;}
 .subbar button[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600;}
 .shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;max-width:var(--page-max);}
+.shell.notab .sidebar{top:var(--topbar-h);height:calc(100vh - var(--topbar-h));}
+.shell.notab .toc{top:calc(var(--topbar-h) + 20px);}
 .sidebar{border-right:1px solid var(--border);padding:22px 14px;height:calc(100vh - var(--topbar-h) - var(--subbar-h));position:sticky;top:calc(var(--topbar-h) + var(--subbar-h));overflow-y:auto;}
 .sidebar .grp{margin-bottom:15px;}
 .sidebar .grp-h{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);padding:5px 10px;width:100%;background:none;border:none;text-align:left;cursor:pointer;border-radius:6px;}
 .sidebar .grp-h:hover{background:var(--bg-subtle);color:var(--text-soft);}
 .sidebar .grp-h .chev{font-size:9px;width:9px;flex:none;}
 .sidebar .sb-tab{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);padding:2px 10px 8px;}
+.fopt{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:8px;font-size:13.5px;color:var(--text-soft);cursor:pointer;margin-bottom:1px;}
+.fopt:hover{background:var(--bg-subtle);color:var(--text);}
+.fopt input{width:15px;height:15px;flex:none;accent-color:var(--accent);cursor:pointer;margin:0;}
+.sidebar a .tt{flex:1;min-width:0;}
+.aud-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);border:1px solid var(--border);border-radius:4px;padding:0 5px;flex:none;}
 .sidebar .grp-h .swatch{width:8px;height:8px;border-radius:3px;}
 .sidebar a{display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:8px;font-size:13.5px;color:var(--text-soft);border-left:2px solid transparent;margin-bottom:1px;}
 .sidebar a[aria-current="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600;border-left-color:var(--accent);}
@@ -396,7 +403,7 @@ PAGES["cmsdev/overview"]={section:"cmsdev",tab:"overview",title:{en:"CMS Develop
 ].forEach(function(e){PAGES[e.k]={section:e.s,tab:e.tab,type:e.type||null,title:e.t,lead:e.d,fromOpenApi:e.fromOpenApi||false,updated:{en:"July 3, 2026",ja:"2026年7月3日"}};});
 var REF_GRP={modeling:["cms/r-fields","cms/r-attributes","cms/r-models","cms/r-groups","cms/r-schema"],content:["cms/r-items","cms/r-itemviews","cms/r-filters","cms/r-assets"],publish:["cms/r-projects","cms/r-workspaces","cms/r-wssettings"],ops:["cms/r-requests","cms/r-comments","cms/r-webhooks","cms/r-integrations","cms/r-import"]};
 Object.keys(REF_GRP).forEach(function(g){REF_GRP[g].forEach(function(k){if(PAGES[k])PAGES[k].grp=g;});});
-var LIBRARY=[{route:"cms/tutorial-getstarted",product:"cms",audience:"user"},{route:"visualizer/tutorial-firstmap",product:"visualizer",audience:"user"},{route:"vplugin/getstarted",product:"developer",audience:"developer"}];
+var LIBRARY=[{route:"cms/tutorial-getstarted",product:"cms",audience:"user"},{route:"visualizer/tutorial-firstmap",product:"visualizer",audience:"user"},{route:"vplugin/getstarted",product:"visualizer",audience:"developer"}];
 // Community destinations. URLs are placeholders — the real channels are an org decision (which platform is the official venue).
 var COMMUNITY=[
   {id:"discord",nm:"Discord",role:{en:"Realtime help & discussion",ja:"リアルタイムの質問・雑談"},url:"#"},
@@ -465,7 +472,7 @@ function topbar(){
 function typePill(k){return '<span class="pill" style="background:'+diaSoft(k)+';color:'+diaColor(k)+'">'+iconFor(k)+L(DIA[k].label)+'</span>';}
 function metaTags(p){return p.est?'<div class="tags"><span class="tag">⏱ '+L(p.est)+'</span></div>':'';}
 function docShell(){var p=PAGES[S.route];if(!p)return placeholder();
-  if(p.standalone)return '<div class="main" id="main">'+article(p)+'</div>';
+  if(p.standalone)return '<div class="shell notab"><aside class="sidebar" aria-label="'+L(T.tutorials)+'">'+tutIndexSidebar()+'</aside><div class="main" id="main">'+article(p)+'</div></div>';
   return subbar()+'<div class="shell"><aside class="sidebar" aria-label="'+esc(secName(S.product))+'">'+sidebar()+'</aside><div class="main" id="main">'+article(p)+'</div></div>';}
 function subbar(){var cfg=sec(S.product);if(!cfg)return "";var tabs=cfg.tabs||[];var p=PAGES[S.route];
   var ctx=cfg.kind==="dev"?'<a href="#" class="ctx" data-route="'+tabRouteFor(S.product,"overview")+'">'+esc(secName(S.product))+'</a><span class="ctx-sep">/</span>':'';
@@ -581,11 +588,20 @@ function developerLanding(){var cards=DEV_LIST.map(function(id){var s=sec(id);va
   return '<main class="home" id="main"><div class="hero" style="margin-bottom:24px"><h1>'+L(T.dev)+'</h1><p>'+L(T.devSub)+'</p></div><div class="sect"><div class="prodgrid">'+cards+'</div></div><p style="max-width:760px;margin:6px auto 0;font-size:12.5px;color:var(--text-muted);text-align:center">'+L({en:"Contributor docs live in each GitHub repository, not here.",ja:"コントリビューター向けは各 GitHub リポジトリにあり、ここには置きません。"})+'</p></main>';}
 function library(){var fp=S.tut.product,fa=S.tut.audience;
   var filtered=LIBRARY.filter(function(it){return (fp.length===0||fp.indexOf(it.product)>=0)&&(fa.length===0||fa.indexOf(it.audience)>=0);});
-  var prodChips=["cms","visualizer","developer"].map(function(id){var on=fp.indexOf(id)>=0;var nm=id==="developer"?L(T.developer):secName(id).replace("Re:Earth ","");return '<button class="chip" data-fprod="'+id+'" '+(on?'aria-pressed="true"':'')+'>'+nm+'</button>';}).join("");
-  var audChips=[["user",T.user],["developer",T.developer]].map(function(a){var on=fa.indexOf(a[0])>=0;return '<button class="chip" data-faud="'+a[0]+'" '+(on?'aria-pressed="true"':'')+'>'+L(a[1])+'</button>';}).join("");
-  var cards=filtered.length?filtered.map(function(it){var pg=PAGES[it.route];var prodName=it.product==="developer"?L(T.developer):secName(it.product).replace("Re:Earth ","");
+  var prodIds=PRODUCT_LIST.filter(function(id){return LIBRARY.some(function(it){return it.product===id;});});
+  var prodOpts=prodIds.map(function(id){var on=fp.indexOf(id)>=0;var nm=secName(id).replace("Re:Earth ","");return '<label class="fopt"><input type="checkbox" data-fprod="'+id+'"'+(on?' checked':'')+'><span>'+esc(nm)+'</span></label>';}).join("");
+  var audOpts=[["user",T.user],["developer",T.developer]].map(function(a){var on=fa.indexOf(a[0])>=0;return '<label class="fopt"><input type="checkbox" data-faud="'+a[0]+'"'+(on?' checked':'')+'><span>'+esc(L(a[1]))+'</span></label>';}).join("");
+  var cards=filtered.length?filtered.map(function(it){var pg=PAGES[it.route];var prodName=secName(it.product).replace("Re:Earth ","");
     return '<a class="tutcard" href="#" data-route="'+it.route+'"><div class="meta"><span class="badge" style="background:'+diaSoft("tutorial")+';color:'+diaColor("tutorial")+'">'+prodName+'</span><span class="badge" style="background:var(--bg-subtle);color:var(--text-soft)">'+(it.audience==="developer"?L(T.developer):L(T.user))+'</span>'+(pg.est?'<span class="badge" style="background:var(--bg-subtle);color:var(--text-muted)">⏱ '+L(pg.est)+'</span>':'')+'</div><div class="ct">'+L(pg.title)+'</div><div class="cd">'+L(pg.lead)+'</div></a>';}).join(""):'<div class="empty">'+L(T.noTut)+'</div>';
-  return '<main class="lib" id="main"><h1>'+L(T.tutorials)+'</h1><p class="sub">'+L(T.tutSub)+'</p><div class="filters"><div class="fgroup"><div class="fh">'+L(T.filterProduct)+'</div><div class="chips">'+prodChips+'</div></div><div class="fgroup"><div class="fh">'+L(T.filterAudience)+'</div><div class="chips">'+audChips+'</div></div></div><div class="tutlist">'+cards+'</div></main>';}
+  var side='<div class="grp"><div class="sb-tab">'+L(T.filterProduct)+'</div>'+prodOpts+'</div>'
+    +'<div class="grp"><div class="sb-tab">'+L(T.filterAudience)+'</div>'+audOpts+'</div>';
+  return '<div class="shell notab"><aside class="sidebar" aria-label="'+L(T.tutorials)+'">'+side+'</aside><div class="main" id="main"><div class="lib"><h1>'+L(T.tutorials)+'</h1><p class="sub">'+L(T.tutSub)+'</p><div class="tutlist">'+cards+'</div></div></div></div>';}
+function tutIndexSidebar(){
+  var groups={};LIBRARY.forEach(function(it){(groups[it.product]=groups[it.product]||[]).push(it);});
+  var order=PRODUCT_LIST.filter(function(id){return groups[id];});
+  return order.map(function(g){var nm=secName(g).replace("Re:Earth ","");
+    var links=groups[g].map(function(it){var pg=PAGES[it.route];var cur=(it.route===S.route);var aud=it.audience==="developer"?' <span class="aud-tag">'+L(T.developer)+'</span>':'';return '<a href="#" data-route="'+it.route+'" '+(cur?'aria-current="true"':'')+'><span class="tt">'+esc(L(pg.title))+'</span>'+aud+'</a>';}).join("");
+    return '<div class="grp"><div class="sb-tab">'+esc(nm)+'</div>'+links+'</div>';}).join("");}
 function placeholder(){var nm=secName(S.product)||"Re:Earth";return '<div class="placeholder" id="main"><h1>'+esc(nm)+' '+L(T.docs)+'</h1><p>'+L({en:"This section is a placeholder in the prototype. CMS, Visualizer and the Visualizer Plugin site are built out — use the switcher.",ja:"このセクションはプロトタイプ上のプレースホルダーです。CMS・Visualizer・Visualizer Plugin は作り込み済みです。スイッチャーからご覧ください。"})+'</p></div>';}
 function svg(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';if(k==="search")return '<svg width="15" height="15" viewBox="0 0 24 24"><circle '+s+' cx="11" cy="11" r="7"/><path '+s+' d="M21 21l-4-4"/></svg>';if(k==="clock")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px"><circle '+s+' cx="12" cy="12" r="9"/><path '+s+' d="M12 7v5l3 2"/></svg>';if(k==="ext")return '<svg width="16" height="16" viewBox="0 0 24 24"><path '+s+' d="M17 3a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4z"/><path '+s+' d="M8.5 12.5h7M12 9v7"/></svg>';if(k==="ai")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:5px"><path '+s+' d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>';if(k==="launch")return '<svg width="15" height="15" viewBox="0 0 24 24"><path '+s+' d="M14 4h6v6"/><path '+s+' d="M20 4L11 13"/><path '+s+' d="M18 14v3a3 3 0 01-3 3H7a3 3 0 01-3-3V9a3 3 0 013-3h3"/></svg>';return "";}
 function iconFor(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';var d={tutorial:'<path '+s+' d="M12 4l10 5-10 5L2 9z"/><path '+s+' d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/>',howto:'<path '+s+' d="M14.7 6.3a4 4 0 00-5.4 5.2L3 18v3h3l6.5-6.5a4 4 0 005.2-5.4l-2.6 2.6-2.1-.5-.5-2.1z"/>',reference:'<path '+s+' d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/>',concepts:'<path '+s+' d="M9 18h6M10 21h4M12 3a6 6 0 013.5 10.9c-.5.4-.5 1-.5 1.6H9c0-.6 0-1.2-.5-1.6A6 6 0 0112 3z"/>'}[k];return '<svg width="15" height="15" viewBox="0 0 24 24" style="margin-right:1px">'+d+'</svg>';}
