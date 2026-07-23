@@ -244,25 +244,25 @@ a.prodcard:hover{border-color:var(--accent);box-shadow:var(--shadow);text-decora
 </div>
 <script>
 "use strict";
-var S={route:"home",product:"cms",lang:"ja",dark:false,tut:{product:[],audience:[]},sf:{product:[],type:[]},fb:{},collapsed:{}};
+var S={route:"home",product:"cms",lang:"ja",dark:false,tut:{product:[],audience:[]},sf:{product:[],type:[],target:[]},fb:{},collapsed:{}};
 function L(o){return o&&o[S.lang]!=null?o[S.lang]:(o?o.en:"");}
 var T={
   docs:{en:"Docs",ja:"ドキュメント"},search:{en:"Search docs…",ja:"ドキュメントを検索…"},onThisPage:{en:"On this page",ja:"このページの内容"},
-  products:{en:"Products",ja:"製品"},productsSub:{en:"Each product has an overview, concepts, how-to guides and reference.",ja:"各製品にオーバービュー・コンセプト・ハウツーガイド・リファレンスがあります。"},
+  products:{en:"Products",ja:"プロダクト"},productsSub:{en:"Each product has an overview, concepts, how-to guides and reference.",ja:"各プロダクトにオーバービュー・コンセプト・ハウツーガイド・リファレンスがあります。"},
   dev:{en:"Developer resources",ja:"開発向けリソース"},devTab:{en:"Developer",ja:"開発向け"},
   community:{en:"Community",ja:"コミュニティ"},communitySub:{en:"Ask questions, share what you built, and meet others working with Re:Earth.",ja:"質問する、作ったものを共有する、Re:Earth を使う他の人とつながる。"},openExt:{en:"Open",ja:"開く"},
-  devSub:{en:"Separate sites for building on Re:Earth — each with its own overview, guides and API reference. Authored by the Solution Engineering team.",ja:"Re:Earth 上に構築するための独立サイト群。各サイトが独自のオーバービュー・ガイド・API リファレンスを持ちます。Solution Engineering チームが執筆します。"},
-  tutorials:{en:"Tutorials",ja:"チュートリアル"},tutSub:{en:"Hands-on lessons across every product — filter by product and audience.",ja:"全製品を横断するハンズオン。製品と対象読者で絞り込めます。"},
+  devSub:{en:"Separate sites for building on Re:Earth — each with its own overview, guides and API reference.",ja:"Re:Earth 上に構築するための独立サイト群。各サイトが独自のオーバービュー・ガイド・API リファレンスを持ちます。"},
+  tutorials:{en:"Tutorials",ja:"チュートリアル"},tutSub:{en:"Hands-on lessons across every product — filter by product and audience.",ja:"全プロダクトを横断するハンズオン。プロダクトと対象読者で絞り込めます。"},
   browseTut:{en:"Browse tutorials",ja:"チュートリアル一覧へ"},getStarted:{en:"Get started",ja:"はじめる"},comingSoon:{en:"Coming soon",ja:"近日公開"},soon:{en:"soon",ja:"準備中"},
   prev:{en:"Previous",ja:"前のページ"},next:{en:"Next",ja:"次のページ"},seeAlso:{en:"See also",ja:"参照"},relTut:{en:"Related tutorials",ja:"関連するチュートリアル"},tryNext:{en:"What to try next",ja:"次にやってみよう"},
   updated:{en:"Updated",ja:"更新日"},report:{en:"Report an issue",ja:"問題を報告"},
   helpful:{en:"Was this page helpful?",ja:"このページは役に立ちましたか？"},yes:{en:"Yes",ja:"はい"},no:{en:"No",ja:"いいえ"},thanks:{en:"Thanks — your feedback reaches the docs team.",ja:"フィードバックありがとうございます。ドキュメントチームに届きます。"},
-  filterProduct:{en:"Product",ja:"製品"},filterAudience:{en:"Audience",ja:"対象読者"},filterType:{en:"Type",ja:"型"},user:{en:"User",ja:"ユーザー"},developer:{en:"Developer",ja:"開発者"},
+  filterProduct:{en:"Product",ja:"プロダクト"},filterAudience:{en:"Target",ja:"対象"},filterType:{en:"Type",ja:"種類"},user:{en:"General",ja:"一般"},developer:{en:"Development",ja:"開発"},
   searchAll:{en:"All",ja:"すべて"},resultCount:{en:"results",ja:"件"},
   anchorLabel:{en:"Link to this section",ja:"この見出しへのリンク"},
   openapiNote:{en:"This reference is generated from the OpenAPI specification.",ja:"このリファレンスは OpenAPI 仕様から自動生成しています。"},
   aiReady:{en:"Built for AI readers",ja:"AI 読者に対応"},llmsFull:{en:"Full text for LLMs",ja:"LLM 向け全文"},footNote:{en:"This site publishes machine-readable text for LLMs and AI agents.",ja:"このサイトは LLM・AI エージェント向けの機械可読テキストを配信しています。"},aiUse:{en:"Hand either link to your AI assistant and it can read the whole documentation faster and more accurately than opening pages one by one.",ja:"どちらかのリンクを AI アシスタントに渡すだけで、ページを1つずつ開かせるより速く正確にドキュメント全体を読み取れます。"},llmsIdx:{en:"Site index for AI",ja:"サイトの目次（AI 向け）"},
-  openProduct:{en:"Open a product",ja:"製品を開く"},
+  openProduct:{en:"Open a product",ja:"プロダクトを開く"},
   noTut:{en:"No tutorials match. Clear a filter.",ja:"該当なし。フィルタを外してください。"},searchMock:{en:"Prototype — search is illustrative",ja:"プロトタイプ — 検索は説明用のモック"},
   stubBody:{en:"This article is in preparation — its outline is agreed and drafting is underway.",ja:"この記事は準備中です（章立ては確定済み、執筆中）。"},
   staleBody:{en:"This page may be out of date and might not reflect the current product.",ja:"このページは内容が古い可能性があります。現在の仕様と異なる場合があります。"}
@@ -288,8 +288,8 @@ var SECTIONS={
   flow:{name:{en:"Re:Earth Flow",ja:"Re:Earth Flow"},kind:"product",sw:"var(--c-flow)",accent:"flow",live:false,desc:{en:"A no-code ETL tool for automated spatial-data workflows at scale.",ja:"空間データを大規模に変換する自動ワークフローをノーコードで構築するETL。"}},
   dashboard:{name:{en:"Re:Earth Dashboard",ja:"Re:Earth Dashboard"},kind:"product",sw:"var(--c-dashboard)",accent:"dashboard",live:false,desc:{en:"The platform layer for Re:Earth — projects, workspaces, members and enterprise features.",ja:"Re:Earth のプラットフォーム基盤。プロジェクト・ワークスペース・メンバー・エンタープライズ機能。"}},
   vplugin:{name:{en:"Visualizer Plugin",ja:"Visualizer プラグイン"},kind:"dev",accent:"visualizer",live:true,desc:{en:"Extend Visualizer with plugins — Widgets, Infobox and Story blocks.",ja:"Visualizer をプラグインで拡張（Widget・Infobox・Story ブロック）。"},structure:["Overview","Get Started","Guides","Examples","API Reference","Tools","Support"],tabs:["overview","get-started","guides","examples","reference","tools","support"]},
-  cmsdev:{name:{en:"CMS Developer",ja:"CMS 開発者向け"},kind:"dev",accent:"cms",live:true,desc:{en:"Public API and Integration API for Re:Earth CMS — read, write and automate content.",ja:"Re:Earth CMS の Public API と Integration API。コンテンツの取得・書き込み・自動化。"},structure:["Overview","Get Started","Guides","Examples","API Reference","Tools","Support"],tabs:["overview","get-started","guides","examples","reference","tools","support"]},
-  flowdev:{name:{en:"Flow Developer",ja:"Flow 開発者向け"},kind:"dev",accent:"flow",live:false,desc:{en:"Building data-transformation workflows with Flow. Planned after the Flow release.",ja:"Flow でデータ変換ワークフローを構築。Flow リリース後に整備予定。"},structure:["Overview","Get Started","Guides","Examples","Reference","Support"]}
+  cmsdev:{name:{en:"CMS Developer",ja:"CMS 開発向け"},kind:"dev",accent:"cms",live:true,desc:{en:"Public API and Integration API for Re:Earth CMS — read, write and automate content.",ja:"Re:Earth CMS の Public API と Integration API。コンテンツの取得・書き込み・自動化。"},structure:["Overview","Get Started","Guides","Examples","API Reference","Tools","Support"],tabs:["overview","get-started","guides","examples","reference","tools","support"]},
+  flowdev:{name:{en:"Flow Developer",ja:"Flow 開発向け"},kind:"dev",accent:"flow",live:false,desc:{en:"Building data-transformation workflows with Flow. Planned after the Flow release.",ja:"Flow でデータ変換ワークフローを構築。Flow リリース後に整備予定。"},structure:["Overview","Get Started","Guides","Examples","Reference","Support"]}
 };
 var PRODUCT_LIST=["cms","visualizer","flow","dashboard"];
 var DEV_LIST=["vplugin","cmsdev","flowdev"];
@@ -379,7 +379,7 @@ PAGES["vplugin/reference"]={section:"vplugin",tab:"reference",type:"reference",t
 PAGES["vplugin/support"]={section:"vplugin",tab:"support",title:{en:"Support & FAQ",ja:"サポート・FAQ"},lead:{en:"Common plugin questions.",ja:"プラグインのよくある質問。"},updated:{en:"July 3, 2026",ja:"2026年7月3日"},
   body:function(){return "<p><b>"+L({en:"Q. My styles don't apply to large datasets.",ja:"Q. 大容量データにスタイルが当たりません。"})+"</b><br>"+L({en:"Large datasets fall back to Simple Style.",ja:"大容量データは Simple Style にフォールバックします。"})+"</p>";}};
 // ===== Developer: CMS Developer =====
-PAGES["cmsdev/overview"]={section:"cmsdev",tab:"overview",title:{en:"CMS Developer",ja:"CMS 開発者向け"},lead:{en:"Two APIs for Re:Earth CMS. Choose by whether you read public content or automate an integration.",ja:"Re:Earth CMS の2つの API。公開コンテンツを読むか、連携を自動化するかで選びます。"},updated:{en:"June 30, 2026",ja:"2026年6月30日"},
+PAGES["cmsdev/overview"]={section:"cmsdev",tab:"overview",title:{en:"CMS Developer",ja:"CMS 開発向け"},lead:{en:"Two APIs for Re:Earth CMS. Choose by whether you read public content or automate an integration.",ja:"Re:Earth CMS の2つの API。公開コンテンツを読むか、連携を自動化するかで選びます。"},updated:{en:"June 30, 2026",ja:"2026年6月30日"},
   toc:[{id:"a-public",l:{en:"Public API",ja:"Public API"}},{id:"a-integration",l:{en:"Integration API",ja:"Integration API"}}],
   body:function(){return "<h2 id=\"a-public\">"+L({en:"Public API",ja:"Public API"})+"</h2><p>"+L({en:"Read-only, key-less access to published content — for websites, maps and AI agents.",ja:"公開コンテンツへの読み取り専用・キー不要アクセス。Web・地図・AI エージェント向け。"})+"</p><h2 id=\"a-integration\">"+L({en:"Integration API",ja:"Integration API"})+"</h2><p>"+L({en:"Key-authenticated read/write with webhooks.",ja:"キー認証の読み書き＋Webhook。"})+"</p><p style=\"font-size:12.5px;color:var(--text-muted)\">"+L({en:"Reference and guides are being migrated in Phase 1.",ja:"リファレンス・ガイドは Phase 1 で移行中です。"})+"</p>"+overviewHub("cmsdev");}};
 [
@@ -463,9 +463,10 @@ function render(){
 }
 function siteFooter(){
   var apps=PRODUCT_LIST.map(function(id){return '<a href="'+APP_URL[id]+'" target="_blank" rel="noopener">'+svg("launch")+secName(id).replace("Re:Earth ","")+'</a>';}).join("");
+  var meta=(S.route==="home")?"":'<div class="ft-meta"><span class="ft-note">'+L(T.footNote)+'</span><span class="ft-links"><span class="ft-ai">'+svg("ai")+L(T.aiReady)+'</span><a href="/llms.txt" target="_blank" rel="noopener">llms.txt</a><a href="/llms-full.txt" target="_blank" rel="noopener">llms-full.txt</a></span></div>';
   return '<footer class="site-footer"><div class="ft-inner">'
     +'<div class="ft-apps"><span class="ft-apps-h">'+L(T.openProduct)+'</span><span class="ft-apps-links">'+apps+'</span></div>'
-    +'<div class="ft-meta"><span class="ft-note">'+L(T.footNote)+'</span><span class="ft-links"><span class="ft-ai">'+svg("ai")+L(T.aiReady)+'</span><a href="/llms.txt" target="_blank" rel="noopener">llms.txt</a><a href="/llms-full.txt" target="_blank" rel="noopener">llms-full.txt</a></span></div>'
+    +meta
     +'</div></footer>';}
 function topbar(){
   var isTut=(S.route==="tutorials")||(PAGES[S.route]&&PAGES[S.route].standalone&&PAGES[S.route].type==="tutorial");
@@ -599,9 +600,9 @@ function library(){var fp=S.tut.product,fa=S.tut.audience;
   var filtered=LIBRARY.filter(function(it){return (fp.length===0||fp.indexOf(it.product)>=0)&&(fa.length===0||fa.indexOf(it.audience)>=0);});
   var prodIds=PRODUCT_LIST.filter(function(id){return LIBRARY.some(function(it){return it.product===id;});});
   var prodOpts=prodIds.map(function(id){var on=fp.indexOf(id)>=0;var nm=secName(id).replace("Re:Earth ","");return '<label class="fopt"><input type="checkbox" data-fprod="'+id+'"'+(on?' checked':'')+'><span>'+esc(nm)+'</span></label>';}).join("");
-  var audOpts=[["user",T.user],["developer",T.developer]].map(function(a){var on=fa.indexOf(a[0])>=0;return '<label class="fopt"><input type="checkbox" data-faud="'+a[0]+'"'+(on?' checked':'')+'><span>'+esc(L(a[1]))+'</span></label>';}).join("");
+  var audOpts=[["developer",T.developer]].map(function(a){var on=fa.indexOf(a[0])>=0;return '<label class="fopt"><input type="checkbox" data-faud="'+a[0]+'"'+(on?' checked':'')+'><span>'+esc(L(a[1]))+'</span></label>';}).join("");
   var cards=filtered.length?filtered.map(function(it){var pg=PAGES[it.route];var prodName=secName(it.product).replace("Re:Earth ","");
-    return '<a class="tutcard" href="#" data-route="'+it.route+'"><div class="meta"><span class="badge" style="background:'+diaSoft("tutorial")+';color:'+diaColor("tutorial")+'">'+prodName+'</span><span class="badge" style="background:var(--bg-subtle);color:var(--text-soft)">'+(it.audience==="developer"?L(T.developer):L(T.user))+'</span>'+(pg.est?'<span class="badge" style="background:var(--bg-subtle);color:var(--text-muted)">⏱ '+L(pg.est)+'</span>':'')+'</div><div class="ct">'+L(pg.title)+'</div><div class="cd">'+L(pg.lead)+'</div></a>';}).join(""):'<div class="empty">'+L(T.noTut)+'</div>';
+    return '<a class="tutcard" href="#" data-route="'+it.route+'"><div class="meta"><span class="badge" style="background:'+diaSoft("tutorial")+';color:'+diaColor("tutorial")+'">'+prodName+'</span>'+(it.audience==="developer"?'<span class="badge" style="background:var(--bg-subtle);color:var(--text-soft)">'+L(T.developer)+'</span>':'')+(pg.est?'<span class="badge" style="background:var(--bg-subtle);color:var(--text-muted)">⏱ '+L(pg.est)+'</span>':'')+'</div><div class="ct">'+L(pg.title)+'</div><div class="cd">'+L(pg.lead)+'</div></a>';}).join(""):'<div class="empty">'+L(T.noTut)+'</div>';
   var side='<div class="grp"><div class="sb-tab">'+L(T.filterProduct)+'</div>'+prodOpts+'</div>'
     +'<div class="grp"><div class="sb-tab">'+L(T.filterAudience)+'</div>'+audOpts+'</div>';
   return '<div class="shell notab"><aside class="sidebar" aria-label="'+L(T.tutorials)+'">'+side+'</aside><div class="main" id="main"><div class="lib"><h1>'+L(T.tutorials)+'</h1><p class="sub">'+L(T.tutSub)+'</p><div class="tutlist">'+cards+'</div></div></div></div>';}
@@ -614,21 +615,24 @@ function tutIndexSidebar(){
 function placeholder(){var nm=secName(S.product)||"Re:Earth";return '<div class="placeholder" id="main"><h1>'+esc(nm)+' '+L(T.docs)+'</h1><p>'+L({en:"This section is a placeholder in the prototype. CMS, Visualizer and the Visualizer Plugin site are built out — use the switcher.",ja:"このセクションはプロトタイプ上のプレースホルダーです。CMS・Visualizer・Visualizer Plugin は作り込み済みです。スイッチャーからご覧ください。"})+'</p></div>';}
 function svg(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';if(k==="search")return '<svg width="15" height="15" viewBox="0 0 24 24"><circle '+s+' cx="11" cy="11" r="7"/><path '+s+' d="M21 21l-4-4"/></svg>';if(k==="clock")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px"><circle '+s+' cx="12" cy="12" r="9"/><path '+s+' d="M12 7v5l3 2"/></svg>';if(k==="ext")return '<svg width="16" height="16" viewBox="0 0 24 24"><path '+s+' d="M17 3a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4z"/><path '+s+' d="M8.5 12.5h7M12 9v7"/></svg>';if(k==="ai")return '<svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:5px"><path '+s+' d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>';if(k==="launch")return '<svg width="15" height="15" viewBox="0 0 24 24"><path '+s+' d="M14 4h6v6"/><path '+s+' d="M20 4L11 13"/><path '+s+' d="M18 14v3a3 3 0 01-3 3H7a3 3 0 01-3-3V9a3 3 0 013-3h3"/></svg>';return "";}
 function iconFor(k){var s='stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';var d={tutorial:'<path '+s+' d="M12 4l10 5-10 5L2 9z"/><path '+s+' d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/>',howto:'<path '+s+' d="M14.7 6.3a4 4 0 00-5.4 5.2L3 18v3h3l6.5-6.5a4 4 0 005.2-5.4l-2.6 2.6-2.1-.5-.5-2.1z"/>',reference:'<path '+s+' d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/>',concepts:'<path '+s+' d="M9 18h6M10 21h4M12 3a6 6 0 013.5 10.9c-.5.4-.5 1-.5 1.6H9c0-.6 0-1.2-.5-1.6A6 6 0 0112 3z"/>'}[k];return '<svg width="15" height="15" viewBox="0 0 24 24" style="margin-right:1px">'+d+'</svg>';}
-function searchProd(p){var scn=sec(p.section);if(!p.section)return "";return (scn&&scn.kind==="dev")?"developer":p.section;}
-function searchDocs(){return Object.keys(PAGES).map(function(k){var p=PAGES[k];var scn=sec(p.section);return {route:k,title:L(p.title),crumb:(scn?L(scn.name).replace("Re:Earth ",""):"")+" · "+(p.type?L(DIA[p.type].label):(p.tab?tabTitle(p.tab):"")),type:p.type||"",product:searchProd(p)};});}
-function searchFacetOpts(all){var prod=[],typ=[];all.forEach(function(d){if(d.product&&prod.indexOf(d.product)<0)prod.push(d.product);if(d.type&&typ.indexOf(d.type)<0)typ.push(d.type);});
-  var prodOrder=["cms","visualizer","flow","dashboard","developer"];var typOrder=["tutorial","concepts","howto","reference"];
+function searchProd(p){var scn=sec(p.section);if(!p.section)return "";return (scn&&scn.kind==="dev")?(DEV_PARENT[p.section]||p.section):p.section;}
+function searchTarget(p){var scn=sec(p.section);return (scn&&scn.kind==="dev")?"development":"general";}
+function searchDocs(){return Object.keys(PAGES).map(function(k){var p=PAGES[k];var scn=sec(p.section);return {route:k,title:L(p.title),crumb:(scn?L(scn.name).replace("Re:Earth ",""):"")+" · "+(p.type?L(DIA[p.type].label):(p.tab?tabTitle(p.tab):"")),type:p.type||"",product:searchProd(p),target:searchTarget(p)};});}
+function searchFacetOpts(all){var prod=[],typ=[],hasDev=false;all.forEach(function(d){if(d.product&&prod.indexOf(d.product)<0)prod.push(d.product);if(d.type&&typ.indexOf(d.type)<0)typ.push(d.type);if(d.target==="development")hasDev=true;});
+  var prodOrder=["cms","visualizer","flow","dashboard"];var typOrder=["tutorial","concepts","howto","reference"];
   prod.sort(function(a,b){return prodOrder.indexOf(a)-prodOrder.indexOf(b);});typ.sort(function(a,b){return typOrder.indexOf(a)-typOrder.indexOf(b);});
-  return {prod:prod,typ:typ};}
-function prodFacetLabel(id){return id==="developer"?L(T.developer):secName(id).replace("Re:Earth ","");}
+  return {prod:prod,typ:typ,tgt:hasDev?["development"]:[]};}
+function prodFacetLabel(id){return secName(id).replace("Re:Earth ","");}
 function renderSearch(){var inp=document.getElementById("searchInput");var q=(inp?inp.value:"").trim().toLowerCase();
   var all=searchDocs();var opts=searchFacetOpts(all);
-  var res=all.filter(function(d){var mq=!q||(d.title+" "+d.crumb).toLowerCase().indexOf(q)>=0;var mp=S.sf.product.length===0||S.sf.product.indexOf(d.product)>=0;var mt=S.sf.type.length===0||S.sf.type.indexOf(d.type)>=0;return mq&&mp&&mt;});
+  var res=all.filter(function(d){var mq=!q||(d.title+" "+d.crumb).toLowerCase().indexOf(q)>=0;var mp=S.sf.product.length===0||S.sf.product.indexOf(d.product)>=0;var mg=S.sf.target.length===0||S.sf.target.indexOf(d.target)>=0;var mt=S.sf.type.length===0||S.sf.type.indexOf(d.type)>=0;return mq&&mp&&mg&&mt;});
   var fbox=document.getElementById("searchFacets");
   if(fbox){var pc=opts.prod.map(function(id){var on=S.sf.product.indexOf(id)>=0;return '<button class="schip" data-sfp="'+id+'" '+(on?'aria-pressed="true"':'')+'>'+esc(prodFacetLabel(id))+'</button>';}).join("");
+    var gc=opts.tgt.map(function(t){var on=S.sf.target.indexOf(t)>=0;return '<button class="schip" data-sfg="'+t+'" '+(on?'aria-pressed="true"':'')+'>'+L(T.developer)+'</button>';}).join("");
     var tc=opts.typ.map(function(t){var on=S.sf.type.indexOf(t)>=0;return '<button class="schip" data-sft="'+t+'" '+(on?'aria-pressed="true"':'')+'>'+L(DIA[t].label)+'</button>';}).join("");
-    fbox.innerHTML='<span class="fl">'+L(T.filterProduct)+'</span>'+pc+'<span class="sep"></span><span class="fl">'+L(T.filterType)+'</span>'+tc;
+    fbox.innerHTML='<span class="fl">'+L(T.filterProduct)+'</span>'+pc+(gc?'<span class="sep"></span><span class="fl">'+L(T.filterAudience)+'</span>'+gc:'')+'<span class="sep"></span><span class="fl">'+L(T.filterType)+'</span>'+tc;
     fbox.querySelectorAll("[data-sfp]").forEach(function(b){b.onclick=function(){toggleFacet(S.sf.product,b.getAttribute("data-sfp"));renderSearch();};});
+    fbox.querySelectorAll("[data-sfg]").forEach(function(b){b.onclick=function(){toggleFacet(S.sf.target,b.getAttribute("data-sfg"));renderSearch();};});
     fbox.querySelectorAll("[data-sft]").forEach(function(b){b.onclick=function(){toggleFacet(S.sf.type,b.getAttribute("data-sft"));renderSearch();};});}
   var box=document.getElementById("searchResults");if(!box)return;
   box.innerHTML=res.length?res.map(function(d,i){var tag=d.type?d.type.slice(0,3).toUpperCase():"OV";return '<a class="result'+(i===0?' act':'')+'" href="#" data-route="'+d.route+'"><span class="tag" style="color:'+(d.type?diaColor(d.type):'var(--text-soft)')+';background:'+(d.type?diaSoft(d.type):'var(--bg-subtle)')+'">'+tag+'</span><span><span class="rt">'+esc(d.title)+'</span><br><span class="rc">'+esc(d.crumb)+'</span></span></a>';}).join(""):'<div class="empty">'+L({en:"No matching pages.",ja:"一致するページがありません。"})+'</div>';
@@ -638,7 +642,7 @@ function toggleFacet(arr,v){var i=arr.indexOf(v);if(i>=0)arr.splice(i,1);else ar
 function openSearch(){var m=document.getElementById("searchModal");m.hidden=false;var i=document.getElementById("searchInput");i.value="";renderSearch();setTimeout(function(){i.focus();},20);}
 function closeSearch(){var m=document.getElementById("searchModal");if(m)m.hidden=true;}
 function wire(){
-  document.querySelectorAll("[data-route]").forEach(function(a){if(a.closest("#searchResults"))return;a.addEventListener("click",function(e){e.preventDefault();var tf=a.getAttribute("data-tutfilter");if(tf){S.tut.product=[tf];S.tut.audience=[];}go(a.getAttribute("data-route"));});});
+  document.querySelectorAll("[data-route]").forEach(function(a){if(a.closest("#searchResults"))return;a.addEventListener("click",function(e){e.preventDefault();var tf=a.getAttribute("data-tutfilter");if(tf){if(tf==="developer"){S.tut.audience=["developer"];S.tut.product=[];}else{S.tut.product=[tf];S.tut.audience=[];}}go(a.getAttribute("data-route"));});});
   document.querySelectorAll("[data-product-sw]").forEach(function(b){b.addEventListener("click",function(){var id=b.getAttribute("data-product-sw");S.product=id;var ov=tabRouteFor(id,"overview");if(ov){go(ov);}else{S.route="__ph";closeSearch();render();window.scrollTo(0,0);syncHash();}});});
   document.querySelectorAll("[data-lang]").forEach(function(b){b.addEventListener("click",function(){S.lang=b.getAttribute("data-lang");render();});});
   var tt=document.getElementById("toggleTheme");if(tt)tt.addEventListener("click",function(){S.dark=!S.dark;render();});
