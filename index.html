@@ -275,6 +275,9 @@ var T={
   community:{en:"Community",ja:"コミュニティ"},communitySub:{en:"Ask questions, share what you built, and meet others working with Re:Earth.",ja:"質問する、作ったものを共有する、Re:Earth を使う他の人とつながる。"},openExt:{en:"Open",ja:"開く"},
   devSub:{en:"Separate sites for building on Re:Earth — each with its own overview, guides and API reference.",ja:"Re:Earth 上に構築するための独立サイト群。各サイトが独自のオーバービュー・ガイド・API リファレンスを持ちます。"},
   tutorials:{en:"Tutorials",ja:"チュートリアル"},tutSub:{en:"Hands-on lessons across every product — filter by product and audience.",ja:"全プロダクトを横断するハンズオン。プロダクトと対象読者で絞り込めます。"},
+  homeTutSub:{en:"Hands-on lessons across every product — filter by product and audience.",ja:"全プロダクトを横断するハンズオン。プロダクトと対象読者で絞り込めます。"},
+  homeDevSub:{en:"Separate sites for building on Re:Earth — each with its own overview, guides and API reference.",ja:"Re:Earth 上に構築するための独立サイト群。各サイトが独自のオーバービュー・ガイド・API リファレンスを持ちます。"},
+  homeAiSub:{en:"This site publishes machine-readable text for LLMs and AI agents.",ja:"このサイトは LLM・AI エージェント向けの機械可読テキストを配信しています。"},
   browseTut:{en:"Browse tutorials",ja:"チュートリアル一覧へ"},getStarted:{en:"Get started",ja:"はじめる"},comingSoon:{en:"Coming soon",ja:"近日公開"},soon:{en:"soon",ja:"準備中"},
   prev:{en:"Previous",ja:"前のページ"},next:{en:"Next",ja:"次のページ"},seeAlso:{en:"See also",ja:"参照"},relTut:{en:"Related tutorials",ja:"関連するチュートリアル"},tryNext:{en:"What to try next",ja:"次にやってみよう"},
   updated:{en:"Updated",ja:"更新日"},report:{en:"Report an issue",ja:"問題を報告"},
@@ -471,7 +474,8 @@ function tabTitle(tab){return L(TABTITLE[tab])||tab;}
 function sectionPages(secId){return Object.keys(PAGES).filter(function(k){return PAGES[k].section===secId&&!PAGES[k].standalone;});}
 function tabRouteFor(secId,tab){var ks=sectionPages(secId).filter(function(k){return PAGES[k].tab===tab;});return ks[0]||null;}
 function accentFor(secId){var s=sec(secId);return (s&&s.accent)||"cms";}
-function go(route){if(!route)return;hideHovercard();S.route=route;var p=PAGES[route];if(p&&p.section&&!(p.standalone&&p.type==="tutorial")){S.product=p.section;}closeSearch();render();window.scrollTo(0,0);syncHash();}
+function openCurrentGroup(){var p=PAGES[S.route];if(p&&p.grp)delete S.collapsed[S.product+"/"+((p&&p.tab)?p.tab:"overview")+"/"+p.grp];}
+function go(route){if(!route)return;hideHovercard();S.route=route;var p=PAGES[route];if(p&&p.section&&!(p.standalone&&p.type==="tutorial")){S.product=p.section;}openCurrentGroup();closeSearch();render();window.scrollTo(0,0);syncHash();}
 function render(){
   document.documentElement.setAttribute("data-theme",S.dark?"dark":"light");
   document.documentElement.setAttribute("data-product",accentFor(S.product));
@@ -495,7 +499,7 @@ function topbar(){
   var isTut=(S.route==="tutorials")||(PAGES[S.route]&&PAGES[S.route].standalone&&PAGES[S.route].type==="tutorial");
   var isDev=(!isTut)&&((S.route==="developer")||(PAGES[S.route]&&sec(S.product)&&sec(S.product).kind==="dev"));
   var sw=PRODUCT_LIST.map(function(id){var cur=(S.product===id&&S.route!=="home"&&!isTut&&!isDev);return '<button data-product-sw="'+id+'" '+(cur?'aria-current="true"':'')+'>'+secName(id).replace("Re:Earth ","")+'</button>';}).join("");
-  return '<header class="topbar"><div class="tb-inner"><button class="logo" data-route="home"><span class="dot"></span>Re:Earth <span style="color:var(--text-muted);font-weight:500">'+L(T.docs)+'</span></button>'
+  return '<header class="topbar"><div class="tb-inner"><button class="logo" data-route="home"><span class="dot"></span>Re:Earth Docs</button>'
     +'<nav class="switcher" aria-label="Sections"><button data-route="tutorials" '+(isTut?'aria-current="true"':'')+'>'+L(T.tutorials)+'</button>'+sw+'<button data-route="developer" '+(isDev?'aria-current="true"':'')+'>'+L(T.devTab)+'</button></nav>'
     +'<div class="spacer"></div><button class="searchbtn" id="openSearch">'+svg("search")+'<span>'+L(T.search)+'</span><kbd>⌘K</kbd></button>'
     +'<div class="seg" role="group" aria-label="Language"><button data-lang="en" '+(S.lang==="en"?'aria-pressed="true"':'')+'>EN</button><button data-lang="ja" '+(S.lang==="ja"?'aria-pressed="true"':'')+'>日本語</button></div>'
@@ -522,7 +526,7 @@ function sidebar(){var cfg=sec(S.product);if(!cfg)return "";var p=PAGES[S.route]
   var html='<div class="grp"><div class="sb-tab">'+tabTitle(curTab)+'</div>';
   flat.forEach(function(k){html+=sideLink(k);});
   html+='</div>';
-  order.forEach(function(g){var gkey=S.product+"/"+curTab+"/"+g;var open=(!S.collapsed[gkey])||byGrp[g].indexOf(S.route)>=0;
+  order.forEach(function(g){var gkey=S.product+"/"+curTab+"/"+g;var open=!S.collapsed[gkey];
     html+='<div class="grp"><button class="grp-h" data-grp="'+gkey+'" aria-expanded="'+open+'"><span class="chev">'+(open?"▾":"▸")+'</span>'+L(GRPLABEL[g]||{en:g,ja:g})+'</button>';
     if(open)byGrp[g].forEach(function(k){html+=sideLink(k);});
     html+='</div>';});
@@ -610,10 +614,10 @@ function docmeta(p){var fb=S.fb[S.route];
 function home(){var prods=PRODUCT_LIST.map(function(id){var s=sec(id);var live=s.live;var route=live?tabRouteFor(id,"overview"):null;
     return (live?'<a class="prodcard" href="#" data-route="'+route+'">':'<div class="prodcard soon">')+'<div class="nm"><span class="sw" style="background:'+s.sw+'"></span>'+L(s.name)+(live?'':'<span class="soonbadge">'+L(T.comingSoon)+'</span>')+'</div><div class="pd">'+L(s.desc)+'</div>'+(live?'<span class="go">'+L(TABTITLE.overview)+' →</span></a>':'</div>');}).join("");
   return '<main class="home" id="main"><div class="hero"><h1>'+L({en:"How can we help?",ja:"お手伝いできることはありますか？"})+'</h1><p>'+L({en:"Documentation, guides and references for the Re:Earth platform.",ja:"Re:Earthプラットフォームのドキュメント・ガイド・リファレンス。"})+'</p></div>'
-    +'<div class="sect"><div class="tutbanner"><div style="flex:1"><div style="font-weight:600;font-size:15px;margin-bottom:3px">'+L(T.tutorials)+'</div><div style="font-size:13px;color:var(--text-soft)">'+L(T.tutSub)+'</div></div><button class="cta" data-route="tutorials">'+L(T.browseTut)+' →</button></div></div>'
+    +'<div class="sect"><div class="tutbanner"><div style="flex:1"><div style="font-weight:600;font-size:15px;margin-bottom:3px">'+L(T.tutorials)+'</div><div style="font-size:13px;color:var(--text-soft)">'+L(T.homeTutSub)+'</div></div><button class="cta" data-route="tutorials">'+L(T.browseTut)+' →</button></div></div>'
     +'<div class="sect"><div class="sect-h">'+L(T.products)+'</div><div class="sect-s">'+L(T.productsSub)+'</div><div class="prodgrid">'+prods+'</div></div>'
-    +'<div class="sect"><div class="sect-h">'+L(T.dev)+'</div><div class="sect-s">'+L(T.devSub)+'</div><div class="tutbanner" style="border-color:var(--border);background:var(--bg-subtle)"><div style="flex:1"><div style="font-weight:600;font-size:14px;margin-bottom:2px">'+L({en:"3 developer sites",ja:"3つの開発向けサイト"})+'</div><div style="font-size:12.5px;color:var(--text-soft)">Visualizer Plugin · CMS Developer · Flow Developer</div></div><button class="cta" data-route="developer">'+L(T.devTab)+' →</button></div></div>'
-    +'<div class="sect"><div class="sect-h">'+L(T.aiReady)+'</div><div class="sect-s">'+L(T.footNote)+'</div><div class="aibox"><div class="aidesc">'+L(T.aiUse)+'</div><div class="ailinks"><a href="/llms.txt" target="_blank" rel="noopener" class="ailink"><span class="aiicon">'+svg("ai")+'</span><span><span class="ain">llms.txt</span><span class="aid">'+L(T.llmsIdx)+'</span></span></a><a href="/llms-full.txt" target="_blank" rel="noopener" class="ailink"><span class="aiicon">'+svg("ai")+'</span><span><span class="ain">llms-full.txt</span><span class="aid">'+L(T.llmsFull)+'</span></span></a></div></div></div>'
+    +'<div class="sect"><div class="sect-h">'+L(T.dev)+'</div><div class="sect-s">'+L(T.homeDevSub)+'</div><div class="tutbanner" style="border-color:var(--border);background:var(--bg-subtle)"><div style="flex:1"><div style="font-weight:600;font-size:14px;margin-bottom:2px">'+L({en:"3 developer sites",ja:"3つの開発向けサイト"})+'</div><div style="font-size:12.5px;color:var(--text-soft)">Visualizer Plugin · CMS Developer · Flow Developer</div></div><button class="cta" data-route="developer">'+L(T.devTab)+' →</button></div></div>'
+    +'<div class="sect"><div class="sect-h">'+L(T.aiReady)+'</div><div class="sect-s">'+L(T.homeAiSub)+'</div><div class="aibox"><div class="aidesc">'+L(T.aiUse)+'</div><div class="ailinks"><a href="/llms.txt" target="_blank" rel="noopener" class="ailink"><span class="aiicon">'+svg("ai")+'</span><span><span class="ain">llms.txt</span><span class="aid">'+L(T.llmsIdx)+'</span></span></a><a href="/llms-full.txt" target="_blank" rel="noopener" class="ailink"><span class="aiicon">'+svg("ai")+'</span><span><span class="ain">llms-full.txt</span><span class="aid">'+L(T.llmsFull)+'</span></span></a></div></div></div>'
     +'<div class="sect"><div class="sect-h">'+L(T.community)+'</div><div class="sect-s">'+L(T.communitySub)+'</div><div class="commgrid">'+community()+'</div></div></main>';}
 function community(){return COMMUNITY.map(function(c){return '<a class="commcard" href="'+c.url+'" target="_blank" rel="noopener"><span class="ci">'+svg("ext")+'</span><span class="cbody"><span class="cn">'+esc(c.nm)+'</span><span class="cr">'+L(c.role)+'</span></span><span class="carr">↗</span></a>';}).join("");}
 function developerLanding(){var cards=DEV_LIST.map(function(id){var s=sec(id);var live=s.live;var route=live?tabRouteFor(id,"overview"):null;
@@ -710,7 +714,7 @@ function routeHash(){if(S.route==="__ph")return "#/_/"+S.product;return "#/"+S.r
 function rawFromHash(){var h=location.hash||"";return (h.indexOf("#/")===0)?h.slice(2):"";}
 function syncHash(){var h=routeHash();if(location.hash===h)return;suppress=true;location.hash=h;}
 function stateFromRaw(raw){if(raw.indexOf("_/")===0){var pid=raw.slice(2);if(SECTIONS[pid]){S.product=pid;S.route="__ph";return true;}return false;}if(raw==="home"||raw==="tutorials"||raw==="developer"){S.route=raw;return true;}if(PAGES[raw]){S.route=raw;var p=PAGES[raw];if(p.section&&!(p.standalone&&p.type==="tutorial"))S.product=p.section;return true;}return false;}
-function applyHash(){var raw=rawFromHash();if(!stateFromRaw(raw))S.route="home";hideHovercard();closeSearch();render();window.scrollTo(0,0);}
+function applyHash(){var raw=rawFromHash();if(!stateFromRaw(raw))S.route="home";openCurrentGroup();hideHovercard();closeSearch();render();window.scrollTo(0,0);}
 window.addEventListener("hashchange",function(){if(suppress){suppress=false;return;}applyHash();});
 if(rawFromHash())applyHash();else render();
 </script>
